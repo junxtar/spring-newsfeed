@@ -6,124 +6,12 @@
         content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link rel="stylesheet" type="text/css" href="/css/style.css">
   <script src="https://code.jquery.com/jquery-3.7.0.min.js"
           integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g="
           crossorigin="anonymous"></script>
   <style>
-    @keyframes open {
-      0% {
-        top: 100%;
-      }
-      100% {
-        top: 50%;
-      }
-    }
 
-    #login-form {
-      z-index: -1;
-      opacity: 0;
-      transition: opacity 2s;
-      position: absolute;
-      overflow: hidden;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -60%);
-      width: 488px;
-      height: 580px;
-      background-color: white;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      border-radius: 20px;
-      box-shadow: 0 4px 25px 0 rgba(0, 200, 0, 1);
-      padding: 80px 50px;
-    }
-
-    .open #login-form {
-      animation: open;
-      animation-duration: 2s;
-      z-index: 1;
-      opacity: 1;
-    }
-
-
-    #login-form {
-
-      margin: 70px auto 141px auto;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-start;
-      align-items: center;
-      padding: 56px 0 0;
-
-      background-color: #ffffff;
-    }
-
-    #login-title {
-      width: 303px;
-      height: 32px;
-      flex-grow: 0;
-      font-family: SpoqaHanSansNeo;
-      font-size: 28px;
-      font-weight: bold;
-      font-stretch: normal;
-      font-style: normal;
-      line-height: 1;
-      letter-spacing: -0.96px;
-      text-align: center;
-      color: #212529;
-    }
-
-    .login-input-box {
-      border-width: 0;
-
-      width: 370px !important;
-      height: 52px;
-      margin: 14px 0 0;
-      border-radius: 5px;
-      background-color: #e9ecef;
-    }
-
-    .login-id-label {
-      width: 382px;
-      padding-left: 11px;
-      margin-top: 40px;
-      font-family: NotoSansCJKKR;
-      font-size: 16px;
-      font-weight: normal;
-      font-stretch: normal;
-      font-style: normal;
-      line-height: 1;
-      letter-spacing: -0.8px;
-      text-align: left;
-      color: #212529;
-    }
-
-    #login-id-submit {
-      border-width: 0;
-      width: 393px;
-      height: 62px;
-      flex-grow: 0;
-      display: flex;
-      flex-direction: row;
-      justify-content: center;
-      align-items: center;
-      gap: 10px;
-      margin: 40px 0 0;
-      padding: 11px 12px;
-      border-radius: 5px;
-      background-color: #15aabf;
-
-      font-size: 20px;
-      font-weight: bold;
-      font-stretch: normal;
-      font-style: normal;
-      line-height: 1;
-      letter-spacing: normal;
-      text-align: center;
-      color: #ffffff;
-    }
 
   </style>
   <meta charset="UTF-8">
@@ -147,8 +35,9 @@
       })
       .then(() => {
         alert("회원가입을 축하드립니다.");
-        window.location.href = host + "/";
+        window.location.href = host + "/login-page";
       }).catch((err) => {
+        // alert(err);
         console.log(err);
       })
     }
@@ -156,8 +45,10 @@
 </head>
 <body>
 <div id="login-form">
-  <div id="login-title">회원 가입</div>
-
+  <div id="login-title" style="margin-bottom: 15px">Signup Page</div>
+  <button id="login-id-btn" onclick="location.href='/api/login-page'">
+    로그인 페이지 이동
+  </button>
   <div class="login-id-label">Username</div>
   <input type="text" name="username" placeholder="Username" class="login-input-box">
 
