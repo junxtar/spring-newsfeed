@@ -19,10 +19,10 @@ public class CommentController {
 
     @PostMapping
     public ResponseEntity<CommentResponseDto> createComment(@PathVariable Long postId,
-                                                           @Valid @RequestBody CommentRequestDto commentRequestDto,
-                                                           @AuthenticationPrincipal UserDetailsImpl userDetail) {
-        return ResponseEntity.ok(commentService.createComment(postId, commentRequestDto, userDetail.getUser()));
+        @Valid @RequestBody CommentRequestDto commentRequestDto,
+        @AuthenticationPrincipal UserDetailsImpl userDetail) {
+        return ResponseEntity.ok(
+            commentService.createComment(postId, commentRequestDto, userDetail.getUser()));
     }
-
 
 }
