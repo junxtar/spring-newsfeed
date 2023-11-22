@@ -1,10 +1,12 @@
 package com.sparta.springnewsfeed.global.security;
 
 import com.sparta.springnewsfeed.domain.user.entity.User;
-import com.sparta.springnewsfeed.domain.user.repository.*;
-import lombok.*;
-import org.springframework.security.core.userdetails.*;
-import org.springframework.stereotype.*;
+import com.sparta.springnewsfeed.domain.user.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor

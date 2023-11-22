@@ -1,7 +1,9 @@
 package com.sparta.springnewsfeed.domain.user.dto;
 
-import jakarta.validation.constraints.*;
-import lombok.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import lombok.Getter;
+import lombok.Setter;
 
 @Getter
 @Setter

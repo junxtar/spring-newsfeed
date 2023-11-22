@@ -1,16 +1,19 @@
 package com.sparta.springnewsfeed.global.security;
 
 
-import com.fasterxml.jackson.databind.*;
-import com.sparta.springnewsfeed.domain.user.dto.*;
-import com.sparta.springnewsfeed.global.jwt.*;
-import jakarta.servlet.*;
-import jakarta.servlet.http.*;
-import java.io.*;
-import lombok.extern.slf4j.*;
-import org.springframework.security.authentication.*;
-import org.springframework.security.core.*;
-import org.springframework.security.web.authentication.*;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sparta.springnewsfeed.domain.user.dto.UserLoginRequestDto;
+import com.sparta.springnewsfeed.global.jwt.JwtUtil;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import java.io.IOException;
 
 @Slf4j(topic = "로그인 및 JWT 생성")
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
@@ -24,7 +27,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request,
-        HttpServletResponse response) throws AuthenticationException {
+                                                HttpServletResponse response) throws AuthenticationException {
         try {
             UserLoginRequestDto requestDto = new ObjectMapper().readValue(request.getInputStream(),
                 UserLoginRequestDto.class);
@@ -44,7 +47,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     @Override
     protected void successfulAuthentication(HttpServletRequest request,
-        HttpServletResponse response, FilterChain chain, Authentication authResult) {
+                                            HttpServletResponse response, FilterChain chain, Authentication authResult) {
         String username = ((UserDetailsImpl) authResult.getPrincipal()).getUsername();
 
         String token = jwtUtil.createToken(username);
@@ -53,7 +56,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request,
-        HttpServletResponse response, AuthenticationException failed) {
+                                              HttpServletResponse response, AuthenticationException failed) {
         response.setStatus(401);
     }
 
