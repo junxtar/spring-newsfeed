@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @Entity
-@Table(name = "comment")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Comment {
 
@@ -19,7 +18,6 @@ public class Comment {
     @Column(name = "comment_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String commentText;
 
     @ManyToOne(fetch = FetchType.LAZY)
