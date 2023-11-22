@@ -11,23 +11,23 @@ import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/api/")
+@RequestMapping("/api/users")
 public class UserController {
 
     private final UserService userService;
 
     //회원가입
-    @PostMapping("/users/signup")
+    @PostMapping("/signup")
     public ResponseEntity<String> UserSignup(@Valid @RequestBody UserSignupRequestDto requestDto) {
         userService.signup(requestDto);
         return ResponseEntity.ok(CommonCode.OK.getMessage());
     }
 
-    //로그아웃
+    //TODO:로그아웃
 
-    //비밀번호 수정
+    //TODO:비밀번호 수정
 
-    //프로필 조회
+    //TODO:프로필 조회
 
-    //프로필 수정
+    //TODO:프로필 수정
 }
