@@ -2,8 +2,9 @@ package com.sparta.springnewsfeed.domain.comment.dto;
 
 import com.sparta.springnewsfeed.domain.comment.entity.Comment;
 import lombok.Builder;
+import lombok.Getter;
 
-
+@Getter
 public class CommentResponseDto {
 
     private String username;
