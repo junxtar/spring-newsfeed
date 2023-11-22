@@ -1,6 +1,7 @@
 package com.sparta.springnewsfeed.domain.post.entity;
 
 import com.sparta.springnewsfeed.domain.post.dto.PostRequestDto;
+import com.sparta.springnewsfeed.domain.user.entity.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
