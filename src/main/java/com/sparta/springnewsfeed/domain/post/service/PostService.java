@@ -5,11 +5,12 @@ import com.sparta.springnewsfeed.domain.post.dto.PostResponseDto;
 import com.sparta.springnewsfeed.domain.post.entity.Post;
 import com.sparta.springnewsfeed.domain.post.repository.PostRepository;
 import com.sparta.springnewsfeed.domain.user.entity.User;
-import java.util.ArrayList;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -20,41 +21,42 @@ public class PostService {
 
     public PostResponseDto getPost(Long postId, User user) {
         Post post = findById(postId);
-        findByUsername(post,user.getUsername());
-        return PostResponseDto.of(post,user);
+        findByUsername(post, user.getUsername());
+        return PostResponseDto.of(post, user);
     }
 
     public List<PostResponseDto> getPostList(User user) {
         List<Post> postList = postRepository.findAllByUserOrderByCreatedAtDesc(user);
         List<PostResponseDto> responseDtoList = new ArrayList<>();
-        for (Post post: postList) {
-            responseDtoList.add(PostResponseDto.of(post,user));
+        for (Post post : postList) {
+            responseDtoList.add(PostResponseDto.of(post, user));
         }
         return responseDtoList;
     }
 
     @Transactional
     public PostResponseDto createPost(PostRequestDto requestDto, User user) {
-        Post savePost = Post.builder().title(requestDto.getTitle())
-                                      .content(requestDto.getContent())
-                                      .user(user)
-                                      .build();
+        Post savePost = Post.builder()
+            .title(requestDto.getTitle())
+            .content(requestDto.getContent())
+            .user(user)
+            .build();
         postRepository.save(savePost);
-        return PostResponseDto.of(savePost,user);
+        return PostResponseDto.of(savePost, user);
     }
 
     @Transactional
     public PostResponseDto updatePost(Long postId, PostRequestDto requestDto, User user) {
         Post post = findById(postId);
-        findByUsername(post,user.getUsername());
+        findByUsername(post, user.getUsername());
         post.update(requestDto);
-        return PostResponseDto.of(post,user);
+        return PostResponseDto.of(post, user);
     }
 
     @Transactional
     public void deletePost(Long postId, User user) {
         Post post = findById(postId);
-        findByUsername(post,user.getUsername());
+        findByUsername(post, user.getUsername());
         postRepository.delete(post);
     }
 
