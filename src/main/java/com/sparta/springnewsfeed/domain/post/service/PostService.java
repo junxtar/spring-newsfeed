@@ -18,25 +18,29 @@ public class PostService {
 
     private final PostRepository postRepository;
 
-    @Transactional
-    public PostResponseDto createPost(PostRequestDto requestDto, User user) {
-        Post savePost = postRepository.save(new Post(requestDto,user));
-        return new PostResponseDto(savePost);
+    public PostResponseDto getPost(Long postId, User user) {
+        Post post = findById(postId);
+        findByUsername(post,user.getUsername());
+        return PostResponseDto.of(post,user);
     }
 
     public List<PostResponseDto> getPostList(User user) {
         List<Post> postList = postRepository.findAllByUserOrderByCreatedAtDesc(user);
         List<PostResponseDto> responseDtoList = new ArrayList<>();
         for (Post post: postList) {
-            responseDtoList.add(new PostResponseDto(post));
+            responseDtoList.add(PostResponseDto.of(post,user));
         }
         return responseDtoList;
     }
 
-    public PostResponseDto getPost(Long postId, User user) {
-        Post post = findById(postId);
-        findByUsername(post,user.getUsername());
-        return new PostResponseDto(post);
+    @Transactional
+    public PostResponseDto createPost(PostRequestDto requestDto, User user) {
+        Post savePost = Post.builder().title(requestDto.getTitle())
+                                      .content(requestDto.getContent())
+                                      .user(user)
+                                      .build();
+        postRepository.save(savePost);
+        return PostResponseDto.of(savePost,user);
     }
 
     @Transactional
@@ -44,7 +48,7 @@ public class PostService {
         Post post = findById(postId);
         findByUsername(post,user.getUsername());
         post.update(requestDto);
-        return new PostResponseDto(post);
+        return PostResponseDto.of(post,user);
     }
 
     @Transactional

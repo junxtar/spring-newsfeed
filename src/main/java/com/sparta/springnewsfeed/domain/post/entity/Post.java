@@ -13,6 +13,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -37,10 +38,10 @@ public class Post extends BaseTime {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-
-    public Post (PostRequestDto requestDto, User user) {
-        this.title = requestDto.getTitle();
-        this.content = requestDto.getContent();
+    @Builder
+    public Post (String title, String content, User user) {
+        this.title = title;
+        this.content = content;
         this.user = user;
     }
 
