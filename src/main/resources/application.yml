@@ -13,3 +13,7 @@ spring:
         show_sql: true
     hibernate:
       ddl-auto: create
+
+jwt:
+  secret:
+    key: 7LWc7KSA7JiB7J6F64uI64ukLuy1nOykgOyYgeyeheuLiOuLpC4=
