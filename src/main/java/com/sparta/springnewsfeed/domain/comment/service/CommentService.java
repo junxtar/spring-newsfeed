@@ -15,14 +15,14 @@ public class CommentService {
     private final CommentRepository commentRepository;
 
     public CommentResponseDto createComment(Long id, CommentRequestDto commentRequestDto, User user) {
-//        Comment comment = new Comment(commentRequestDto.getContent(), user);
 
-        Comment saveComment = Comment.builder().commentText(commentRequestDto.getCommentText())
-                                            .user(user.user)
+        Comment saveComment = Comment.builder()
+                                            .commentText(commentRequestDto.getCommentText())
+                                            .user(user)
                                             .build();
 
         commentRepository.save(saveComment);
 
-        return new CommentResponseDto(saveComment);
+        return new CommentResponseDto.of(saveComment, user.getUsername());
     }
 }

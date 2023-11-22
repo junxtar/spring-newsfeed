@@ -29,7 +29,7 @@ public class Comment {
     private Post post;
 
     @Builder
-    public Comment(Long id, String commentText, User user, Post post) {
+    private Comment(Long id, String commentText, User user, Post post) {
         this.id = id;
         this.commentText = commentText;
         this.user = user;
