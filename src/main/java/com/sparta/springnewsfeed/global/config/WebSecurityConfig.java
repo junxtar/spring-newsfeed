@@ -1,19 +1,22 @@
 package com.sparta.springnewsfeed.global.config;
 
-import com.sparta.springnewsfeed.global.security.*;
-import com.sparta.springnewsfeed.global.jwt.*;
-import lombok.*;
-import org.springframework.boot.autoconfigure.security.servlet.*;
-import org.springframework.context.annotation.*;
-import org.springframework.security.authentication.*;
-import org.springframework.security.config.annotation.authentication.configuration.*;
-import org.springframework.security.config.annotation.web.builders.*;
-import org.springframework.security.config.annotation.web.configuration.*;
-import org.springframework.security.config.http.*;
-import org.springframework.security.crypto.bcrypt.*;
-import org.springframework.security.crypto.password.*;
-import org.springframework.security.web.*;
-import org.springframework.security.web.authentication.*;
+import com.sparta.springnewsfeed.global.jwt.JwtUtil;
+import com.sparta.springnewsfeed.global.security.JwtAuthenticationFilter;
+import com.sparta.springnewsfeed.global.security.JwtAuthorizationFilter;
+import com.sparta.springnewsfeed.global.security.UserDetailsServiceImpl;
+import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
