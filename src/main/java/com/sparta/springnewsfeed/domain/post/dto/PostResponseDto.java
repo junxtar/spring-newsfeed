@@ -2,9 +2,10 @@ package com.sparta.springnewsfeed.domain.post.dto;
 
 import com.sparta.springnewsfeed.domain.post.entity.Post;
 import com.sparta.springnewsfeed.domain.user.entity.User;
-import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Getter;
+
+import java.time.LocalDateTime;
 
 @Getter
 public class PostResponseDto {
@@ -21,11 +22,11 @@ public class PostResponseDto {
         this.createdAt = createdAt;
     }
 
-    public static PostResponseDto of (Post post, User user) {
+    public static PostResponseDto of(Post post, User user) {
         return PostResponseDto.builder().title(post.getTitle())
-                                        .content(post.getContent())
-                                        .createdAt(post.getCreatedAt())
-                                        .username(user.getUsername())
-                                        .build();
+            .content(post.getContent())
+            .createdAt(post.getCreatedAt())
+            .username(user.getUsername())
+            .build();
     }
 }
