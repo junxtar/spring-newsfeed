@@ -24,11 +24,11 @@ public class PostController {
 
     private final PostService postService;
 
-    @PostMapping
-    public ResponseEntity<PostResponseDto> createPost(@RequestBody PostRequestDto requestDto,
-                                                      @AuthenticationPrincipal UserDetailsImpl userDetails){
-        PostResponseDto responseDto = postService.createPost(requestDto,userDetails.getUser());
-        return ResponseEntity.status(201).body(responseDto);
+    @GetMapping("/{postId}")
+    public ResponseEntity<PostResponseDto> getPost(@PathVariable Long postId,
+                                                   @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        PostResponseDto responseDto = postService.getPost(postId,userDetails.getUser());
+        return ResponseEntity.ok().body(responseDto);
     }
 
     @GetMapping
@@ -37,11 +37,11 @@ public class PostController {
         return ResponseEntity.ok().body(responseDtoList);
     }
 
-    @GetMapping("/{postId}")
-    public ResponseEntity<PostResponseDto> getPost(@PathVariable Long postId,
-                                                   @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        PostResponseDto responseDto = postService.getPost(postId,userDetails.getUser());
-        return ResponseEntity.ok().body(responseDto);
+    @PostMapping
+    public ResponseEntity<PostResponseDto> createPost(@RequestBody PostRequestDto requestDto,
+                                                      @AuthenticationPrincipal UserDetailsImpl userDetails){
+        PostResponseDto responseDto = postService.createPost(requestDto,userDetails.getUser());
+        return ResponseEntity.status(201).body(responseDto);
     }
 
     @PutMapping("/{postId}")
