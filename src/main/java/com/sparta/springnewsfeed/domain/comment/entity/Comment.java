@@ -3,9 +3,7 @@ package com.sparta.springnewsfeed.domain.comment.entity;
 
 import com.sparta.springnewsfeed.domain.comment.dto.CommentRequestDto;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Getter
 @Entity
@@ -30,8 +28,10 @@ public class Comment {
     @JoinColumn(name = "post_id")
     private Post post;
 
-    public Comment(CommentRequestDto commentRequestDto, User user, Post post) {
-        this.commentText = commentRequestDto.getContent();
+    @Builder
+    public Comment(Long id, String commentText, User user, Post post) {
+        this.id = id;
+        this.commentText = commentText;
         this.user = user;
         this.post = post;
     }

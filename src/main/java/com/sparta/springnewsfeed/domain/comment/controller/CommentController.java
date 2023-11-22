@@ -4,21 +4,19 @@ import com.sparta.springnewsfeed.domain.comment.dto.CommentRequestDto;
 import com.sparta.springnewsfeed.domain.comment.dto.CommentResponseDto;
 import com.sparta.springnewsfeed.domain.comment.service.CommentService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/comments")
+@RequestMapping("/api/posts/{postId}/comments")
 public class CommentController {
 
     private final CommentService commentService;
 
     @PostMapping
-    public CommentResponseDto createComment(@RequestBody CommentRequestDto commentRequestDto,
-                                            @AuthenticationPrincipal CommentDetailImpl commentDetail) {
-        return commentService.createComment(commentRequestDto, commentDetail.getUser());
+    public CommentResponseDto createComment(@PathVariable Long postId,
+                                            @RequestBody CommentRequestDto commentRequestDto,
+                                            @AuthenticationPrincipal UserDetailImpl userDetail) {
+        return commentService.createComment(postId, commentRequestDto, userDetail.getUser());
     }
 }
