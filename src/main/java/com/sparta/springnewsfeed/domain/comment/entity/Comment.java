@@ -1,9 +1,13 @@
 package com.sparta.springnewsfeed.domain.comment.entity;
 
 
-import com.sparta.springnewsfeed.domain.comment.dto.CommentRequestDto;
+import com.sparta.springnewsfeed.domain.post.entity.Post;
+import com.sparta.springnewsfeed.domain.user.entity.User;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @Entity

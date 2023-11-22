@@ -2,7 +2,6 @@ package com.sparta.springnewsfeed.domain.comment.dto;
 
 import com.sparta.springnewsfeed.domain.comment.entity.Comment;
 import lombok.Builder;
-import org.apache.catalina.User;
 
 
 public class CommentResponseDto {
@@ -16,11 +15,11 @@ public class CommentResponseDto {
         this.commentText = commentText;
     }
 
-    public static CommentResponseDto of (Comment comment, String username) {
+    public static CommentResponseDto of(Comment comment, String username) {
 
         return CommentResponseDto.builder().commentText(comment.getCommentText())
-                                            .username(username)
-                                            .build();
+            .username(username)
+            .build();
 
     }
 }

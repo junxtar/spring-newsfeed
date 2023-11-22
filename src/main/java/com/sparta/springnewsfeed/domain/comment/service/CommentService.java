@@ -4,9 +4,9 @@ import com.sparta.springnewsfeed.domain.comment.dto.CommentRequestDto;
 import com.sparta.springnewsfeed.domain.comment.dto.CommentResponseDto;
 import com.sparta.springnewsfeed.domain.comment.entity.Comment;
 import com.sparta.springnewsfeed.domain.comment.repository.CommentRepository;
+import com.sparta.springnewsfeed.domain.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
 @Service
 @RequiredArgsConstructor
@@ -23,6 +23,6 @@ public class CommentService {
 
         commentRepository.save(saveComment);
 
-        return new CommentResponseDto.of(saveComment, user.getUsername());
+        return CommentResponseDto.of(saveComment, user.getUsername());
     }
 }
