@@ -1,11 +1,14 @@
 package com.sparta.springnewsfeed.global.security;
 
 import com.sparta.springnewsfeed.domain.user.entity.User;
-import java.util.*;
-import lombok.*;
-import org.springframework.security.core.*;
-import org.springframework.security.core.authority.*;
-import org.springframework.security.core.userdetails.*;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.ArrayList;
+import java.util.Collection;
 
 @Getter
 @RequiredArgsConstructor

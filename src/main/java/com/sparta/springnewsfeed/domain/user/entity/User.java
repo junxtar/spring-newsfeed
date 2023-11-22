@@ -1,7 +1,9 @@
 package com.sparta.springnewsfeed.domain.user.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Getter

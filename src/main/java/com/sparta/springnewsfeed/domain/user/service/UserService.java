@@ -1,12 +1,13 @@
 package com.sparta.springnewsfeed.domain.user.service;
 
-import com.sparta.springnewsfeed.domain.user.dto.*;
-import com.sparta.springnewsfeed.domain.user.entity.*;
-import com.sparta.springnewsfeed.domain.user.repository.*;
-import java.util.*;
-import lombok.*;
-import org.springframework.security.crypto.password.*;
-import org.springframework.stereotype.*;
+import com.sparta.springnewsfeed.domain.user.dto.UserSignupRequestDto;
+import com.sparta.springnewsfeed.domain.user.entity.User;
+import com.sparta.springnewsfeed.domain.user.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor

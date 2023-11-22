@@ -1,6 +1,7 @@
 package com.sparta.springnewsfeed.domain.user.dto;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
 
 @Getter
 @Setter
