@@ -17,8 +17,10 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final PostRepository postRepository;
 
-    public CommentResponseDto createComment(Long id, CommentRequestDto commentRequestDto, User user) {
-        Post post = postRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("게시물이 없습니다."));
+    public CommentResponseDto createComment(Long id, CommentRequestDto commentRequestDto,
+        User user) {
+        Post post = postRepository.findById(id)
+            .orElseThrow(() -> new IllegalArgumentException("게시물이 없습니다."));
 
         Comment saveComment = Comment.builder()
             .post(post)
