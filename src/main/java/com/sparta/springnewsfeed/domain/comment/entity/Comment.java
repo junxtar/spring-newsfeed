@@ -3,6 +3,7 @@ package com.sparta.springnewsfeed.domain.comment.entity;
 
 import com.sparta.springnewsfeed.domain.post.entity.Post;
 import com.sparta.springnewsfeed.domain.user.entity.User;
+import com.sparta.springnewsfeed.global.util.BaseTime;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -12,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Comment {
+public class Comment extends BaseTime {
 
     @Id
     @Column(name = "comment_id")
@@ -35,4 +36,9 @@ public class Comment {
         this.user = user;
         this.post = post;
     }
+
+    public void update(String commentText) {
+        this.commentText = commentText;
+    }
+
 }
