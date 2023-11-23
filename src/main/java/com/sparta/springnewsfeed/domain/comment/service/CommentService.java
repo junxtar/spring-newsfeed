@@ -3,6 +3,8 @@ package com.sparta.springnewsfeed.domain.comment.service;
 import com.sparta.springnewsfeed.domain.comment.dto.CommentRequestDto;
 import com.sparta.springnewsfeed.domain.comment.dto.CommentResponseDto;
 import com.sparta.springnewsfeed.domain.comment.entity.Comment;
+import com.sparta.springnewsfeed.domain.comment.exception.CommentErrorCode;
+import com.sparta.springnewsfeed.domain.comment.exception.CommentExistsException;
 import com.sparta.springnewsfeed.domain.comment.repository.CommentRepository;
 import com.sparta.springnewsfeed.domain.post.entity.Post;
 import com.sparta.springnewsfeed.domain.post.repository.PostRepository;
@@ -60,18 +62,18 @@ public class CommentService {
 
     private Comment checkAuthority(Comment comment, User user) {
         if (!comment.getUser().getUsername().equals(user.getUsername())) {
-            throw new IllegalArgumentException("수정 권한이 없습니다.");
+            throw new CommentExistsException(CommentErrorCode.UN_AUTHORIZED_USER);
         }
         return comment;
     }
 
     private Comment checkComment(Long commentId) {
         return commentRepository.findById(commentId)
-            .orElseThrow(() -> new IllegalArgumentException("해당 댓글이 없습니다."));
+            .orElseThrow(() -> new CommentExistsException(CommentErrorCode.NOT_EXISTS_COMMENT));
     }
 
     private Post checkPost(Long postId) {
         return postRepository.findById(postId)
-            .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다."));
+            .orElseThrow(() -> new CommentExistsException(CommentErrorCode.NOT_EXISTS_POST));
     }
 }
