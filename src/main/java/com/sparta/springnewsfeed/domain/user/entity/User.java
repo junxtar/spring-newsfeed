@@ -1,11 +1,9 @@
 package com.sparta.springnewsfeed.domain.user.entity;
 
-import com.sparta.springnewsfeed.domain.post.entity.Post;
+import com.sparta.springnewsfeed.domain.post.entity.*;
 import jakarta.persistence.*;
-import java.util.List;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import java.util.*;
+import lombok.*;
 
 @Entity
 @Getter
@@ -18,15 +16,20 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
     private Long id;
-    @Column(nullable = false, unique = true)
     private String username;
-    @Column
     private String password;
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     List<Post> postList;
+    private String content;
 
-    public User(String username, String password) {
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    @Builder
+    public User(String username, String password, String content) {
         this.username = username;
         this.password = password;
+        this.content = content;
     }
 }
