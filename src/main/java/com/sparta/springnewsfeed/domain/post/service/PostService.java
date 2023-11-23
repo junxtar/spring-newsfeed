@@ -26,7 +26,6 @@ public class PostService {
 
     public SelectPostResponseDto getPost(Long postId, User user) {
         Post post = findById(postId);
-        findByUsername(post, user.getUsername());
         List<CommentResponseDto> commentResponseDtoList = commentList(post);
         return SelectPostResponseDto.of(post, user, commentResponseDtoList);
     }
@@ -74,15 +73,17 @@ public class PostService {
 
     private void findByUsername(Post post, String username) {
         if (!post.getUser().getUsername().equals(username)) {
-            throw new NullPointerException("존재하지 않는 회원 입니다.");
+            throw new PostExistsException(PostErrorCode.NOT_EXISTS_USER);
         }
     }
 
     private List<CommentResponseDto> commentList(Post post) {
         List<CommentResponseDto> commentResponseDtoList = new ArrayList<>();
         List<Comment> commentList = post.getCommentList();
+        commentList.sort((o1, o2) -> o2.getCreatedAt().compareTo(o1.getCreatedAt()));
         for (Comment comment : commentList) {
-            commentResponseDtoList.add(CommentResponseDto.of(comment,comment.getUser().getUsername()));
+            commentResponseDtoList.add(
+                CommentResponseDto.of(comment, comment.getUser().getUsername()));
         }
         return commentResponseDtoList;
     }
