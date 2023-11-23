@@ -3,6 +3,8 @@ package com.sparta.springnewsfeed.domain.post.service;
 import com.sparta.springnewsfeed.domain.post.dto.PostRequestDto;
 import com.sparta.springnewsfeed.domain.post.dto.PostResponseDto;
 import com.sparta.springnewsfeed.domain.post.entity.Post;
+import com.sparta.springnewsfeed.domain.post.exception.PostErrorCode;
+import com.sparta.springnewsfeed.domain.post.exception.PostExistsException;
 import com.sparta.springnewsfeed.domain.post.repository.PostRepository;
 import com.sparta.springnewsfeed.domain.user.entity.User;
 import lombok.RequiredArgsConstructor;
@@ -63,7 +65,7 @@ public class PostService {
     ///////////////////////////////////////////////////////
     private Post findById(Long postId) {
         return postRepository.findById(postId).orElseThrow(
-            () -> new NullPointerException("해당 게시물이 존재하지 않습니다."));
+            () -> new PostExistsException(PostErrorCode.NOT_EXISTS_POST));
     }
 
     private void findByUsername(Post post, String username) {
