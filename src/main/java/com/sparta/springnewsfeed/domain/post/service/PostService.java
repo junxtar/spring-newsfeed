@@ -1,7 +1,10 @@
 package com.sparta.springnewsfeed.domain.post.service;
 
+import com.sparta.springnewsfeed.domain.comment.dto.CommentResponseDto;
+import com.sparta.springnewsfeed.domain.comment.entity.Comment;
 import com.sparta.springnewsfeed.domain.post.dto.PostRequestDto;
 import com.sparta.springnewsfeed.domain.post.dto.PostResponseDto;
+import com.sparta.springnewsfeed.domain.post.dto.SelectPostResponseDto;
 import com.sparta.springnewsfeed.domain.post.entity.Post;
 import com.sparta.springnewsfeed.domain.post.exception.PostErrorCode;
 import com.sparta.springnewsfeed.domain.post.exception.PostExistsException;
@@ -21,10 +24,11 @@ public class PostService {
 
     private final PostRepository postRepository;
 
-    public PostResponseDto getPost(Long postId, User user) {
+    public SelectPostResponseDto getPost(Long postId, User user) {
         Post post = findById(postId);
         findByUsername(post, user.getUsername());
-        return PostResponseDto.of(post, user);
+        List<CommentResponseDto> commentResponseDtoList = commentList(post);
+        return SelectPostResponseDto.of(post, user, commentResponseDtoList);
     }
 
     public List<PostResponseDto> getPostList(User user) {
@@ -72,6 +76,15 @@ public class PostService {
         if (!post.getUser().getUsername().equals(username)) {
             throw new NullPointerException("존재하지 않는 회원 입니다.");
         }
+    }
+
+    private List<CommentResponseDto> commentList(Post post) {
+        List<CommentResponseDto> commentResponseDtoList = new ArrayList<>();
+        List<Comment> commentList = post.getCommentList();
+        for (Comment comment : commentList) {
+            commentResponseDtoList.add(CommentResponseDto.of(comment,comment.getUser().getUsername()));
+        }
+        return commentResponseDtoList;
     }
     ///////////////////////////////////////////////////////
 }
