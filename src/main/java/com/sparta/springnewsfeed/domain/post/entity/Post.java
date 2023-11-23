@@ -5,6 +5,7 @@ import com.sparta.springnewsfeed.domain.post.dto.PostRequestDto;
 import com.sparta.springnewsfeed.domain.user.entity.User;
 import com.sparta.springnewsfeed.global.util.BaseTime;
 import jakarta.persistence.*;
+import java.util.ArrayList;
 import lombok.*;
 
 import java.util.List;
@@ -15,8 +16,10 @@ import java.util.List;
 @Table(name = "post")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Post extends BaseTime {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "post_id")
     private Long id;
 
     @Column(nullable = false)
@@ -42,5 +45,11 @@ public class Post extends BaseTime {
     public void update(PostRequestDto requestDto) {
         this.title = requestDto.getTitle();
         this.content = requestDto.getContent();
+    }
+    public List<Comment> getCommentList() {
+        if (commentList.size() == 0) {
+            commentList = new ArrayList<>();
+        }
+        return commentList;
     }
 }

@@ -2,6 +2,7 @@ package com.sparta.springnewsfeed.domain.post.controller;
 
 import com.sparta.springnewsfeed.domain.post.dto.PostRequestDto;
 import com.sparta.springnewsfeed.domain.post.dto.PostResponseDto;
+import com.sparta.springnewsfeed.domain.post.dto.SelectPostResponseDto;
 import com.sparta.springnewsfeed.domain.post.service.PostService;
 import com.sparta.springnewsfeed.global.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
@@ -19,9 +20,9 @@ public class PostController {
     private final PostService postService;
 
     @GetMapping("/{postId}")
-    public ResponseEntity<PostResponseDto> getPost(@PathVariable Long postId,
+    public ResponseEntity<SelectPostResponseDto> getPost(@PathVariable Long postId,
                                                    @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        PostResponseDto responseDto = postService.getPost(postId, userDetails.getUser());
+        SelectPostResponseDto responseDto = postService.getPost(postId, userDetails.getUser());
         return ResponseEntity.ok().body(responseDto);
     }
 
