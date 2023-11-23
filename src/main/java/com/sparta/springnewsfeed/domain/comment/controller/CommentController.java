@@ -25,4 +25,14 @@ public class CommentController {
             commentService.createComment(postId, commentRequestDto, userDetail.getUser()));
     }
 
+    @PatchMapping
+    public ResponseEntity<CommentResponseDto> updateComment(@PathVariable Long postId,
+        @Valid @RequestBody CommentRequestDto commentRequestDto,
+        @RequestParam Long commentId,
+        @AuthenticationPrincipal UserDetailsImpl userDetail) {
+        return ResponseEntity.ok(
+            commentService.updateComment(postId, commentRequestDto, commentId, userDetail.getUser()));
+    }
+
+
 }
