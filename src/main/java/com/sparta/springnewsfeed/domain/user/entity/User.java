@@ -27,9 +27,11 @@ public class User {
     }
 
     @Builder
-    public User(String username, String password, String content) {
+    private User(String username, String password, String content) {
         this.username = username;
         this.password = password;
         this.content = content;
     }
+
+
 }

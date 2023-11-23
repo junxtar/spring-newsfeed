@@ -4,6 +4,7 @@ import com.sparta.springnewsfeed.domain.user.entity.*;
 import lombok.*;
 
 @Getter
+@Setter
 public class UserResponseDto {
 
     private String username;
