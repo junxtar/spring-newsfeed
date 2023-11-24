@@ -25,20 +25,22 @@ public class CommentController {
             commentService.createComment(postId, commentRequestDto, userDetail.getUser()));
     }
 
-    @PatchMapping
+    @PatchMapping("/{commentId}")
     public ResponseEntity<CommentResponseDto> updateComment(@PathVariable Long postId,
         @Valid @RequestBody CommentRequestDto commentRequestDto,
-        @RequestParam Long commentId,
+        @PathVariable Long commentId,
         @AuthenticationPrincipal UserDetailsImpl userDetail) {
         return ResponseEntity.ok(
             commentService.updateComment(postId, commentRequestDto, commentId, userDetail.getUser()));
     }
 
     @DeleteMapping
-    public void deleteComment(@PathVariable Long postId,
+    public ResponseEntity<Void> deleteComment(@PathVariable Long postId,
                               @RequestParam Long commentId,
                               @AuthenticationPrincipal UserDetailsImpl userDetails) {
         commentService.deleteComment(postId, commentId, userDetails.getUser());
+
+        return ResponseEntity.noContent().build();
     }
 
 }

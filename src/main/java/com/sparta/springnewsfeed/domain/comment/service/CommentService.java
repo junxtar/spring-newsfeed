@@ -9,7 +9,10 @@ import com.sparta.springnewsfeed.domain.comment.repository.CommentRepository;
 import com.sparta.springnewsfeed.domain.post.entity.Post;
 import com.sparta.springnewsfeed.domain.post.repository.PostRepository;
 import com.sparta.springnewsfeed.domain.user.entity.User;
+import com.sparta.springnewsfeed.global.common.CommonCode;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -52,12 +55,14 @@ public class CommentService {
     }
 
     @Transactional
-    public void deleteComment(Long postId, Long commentId, User user) {
+    public ResponseEntity<String> deleteComment(Long postId, Long commentId, User user) {
         Post post = checkPost(postId);
         Comment exist = checkComment(commentId);
         Comment authority = checkAuthority(exist, user);
 
         commentRepository.delete(authority);
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(CommonCode.OK.getMessage());
     }
 
     private Comment checkAuthority(Comment comment, User user) {
