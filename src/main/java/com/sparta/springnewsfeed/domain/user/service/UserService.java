@@ -21,7 +21,7 @@ public class UserService {
         String password = passwordEncoder.encode(requestDto.getPassword());
         Optional<User> checkUsername = userRepository.findByUsername(username);
         if (checkUsername.isPresent()) {
-            throw new AlreadyExsistUserException(UserErrorCode.ALREADY_EXSIST_USER);
+            throw new AlreadyExistUserException(UserErrorCode.ALREADY_EXSIST_USER);
         }
         User user = User.builder()
             .username(username)
@@ -37,22 +37,37 @@ public class UserService {
 
     public UserResponseDto updateProfile(Long userId, UserUpdateProfileRequestDto requestDto,
         User user) {
-        User targetProfile = writerId(userId, user);
+        User targetProfile = targetId(userId, user);
         targetProfile.setContent(requestDto.getContent());
         userRepository.save(targetProfile);
         return UserResponseDto.of(targetProfile);
     }
 
-    private User writerId(Long userId, User user) {
-        User targetProfile = existId(userId);
-        if (!user.getUsername().equals(targetProfile.getUsername())) {
+    public UserModifyPasswordResponse modifyPassword(Long userId,
+        UserModifyPasswordRequestDto requestDto,
+        User user) {
+        User targetUser = targetId(userId, user);
+        if (!passwordEncoder.matches(requestDto.getCurrentPassword(),
+            targetUser.getPassword())) {
+            throw new PasswordIsNotMatchException(UserErrorCode.PASSWORD_IS_NOT_MATCH);
+        }
+        targetUser.setPassword(passwordEncoder.encode(requestDto.getNewPassword()));
+        userRepository.save(targetUser);
+        return new UserModifyPasswordResponse(targetUser);
+    }
+
+    ///////////////////////////////////////////////////////
+    private User targetId(Long userId, User user) {
+        User targetUser = existId(userId);
+        if (!user.getUsername().equals(targetUser.getUsername())) {
             throw new RejectedUserExecutionException(UserErrorCode.REJECTED_USER_EXECUTION);
         }
-        return targetProfile;
+        return targetUser;
     }
 
     private User existId(Long userId) {
         return userRepository.findById(userId)
-            .orElseThrow(() -> new NonProfileExsistException(UserErrorCode.NON_PROFILE_EXSIST));
+            .orElseThrow(() -> new NonUserExsistException(UserErrorCode.NON_USER_EXSIST));
     }
+    ///////////////////////////////////////////////////////
 }
