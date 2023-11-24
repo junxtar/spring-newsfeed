@@ -4,6 +4,7 @@ import static com.sparta.springnewsfeed.global.jwt.JwtUtil.ACCESS_TOKEN_HEADER;
 import static com.sparta.springnewsfeed.global.jwt.JwtUtil.REFRESH_TOKEN_HEADER;
 
 import com.sparta.springnewsfeed.global.jwt.JwtUtil;
+import com.sparta.springnewsfeed.global.redis.RedisUtil;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -25,8 +26,8 @@ import org.springframework.web.filter.OncePerRequestFilter;
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
+    private final RedisUtil redisUtil;
     private final UserDetailsServiceImpl userDetailsService;
-
 
     @Override
     protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res,
@@ -34,18 +35,19 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
         String accessToken = jwtUtil.getTokenFromHeader(req, ACCESS_TOKEN_HEADER);
 
-        if (StringUtils.hasText(accessToken)) {
-            if (!jwtUtil.validateToken(accessToken)) {
-                String refreshToken = jwtUtil.getTokenFromHeader(req, REFRESH_TOKEN_HEADER);
-                if (StringUtils.hasText(refreshToken)) {
-                    if (jwtUtil.validateToken(refreshToken)) {
-                        //TODO:한번더 redis 검증-true
-                        accessToken = jwtUtil.createAccessToken(
-                            jwtUtil.getIdFromToken(refreshToken)).split(" ")[1].trim();
-                        log.warn("ref: "+jwtUtil.getUserInfoFromToken(refreshToken));
-                    }
-                }
+        if (StringUtils.hasText(accessToken) && !jwtUtil.validateToken(accessToken)) {
+            String refreshToken = jwtUtil.getTokenFromHeader(req, REFRESH_TOKEN_HEADER);
+
+            if (StringUtils.hasText(refreshToken) && jwtUtil.validateToken(refreshToken)
+                && redisUtil.hasKey(refreshToken)) {
+
+                Long userId = (Long) redisUtil.get(refreshToken);
+                accessToken = jwtUtil.createAccessToken(userDetailsService.UserById(userId).getUsername())
+                    .split(" ")[1].trim();
             }
+        }
+
+        if (StringUtils.hasText(accessToken)) {
             Claims info = jwtUtil.getUserInfoFromToken(accessToken);
             log.warn(info.getSubject());
             try {

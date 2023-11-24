@@ -4,8 +4,8 @@ package com.sparta.springnewsfeed.global.security;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sparta.springnewsfeed.domain.user.dto.UserLoginRequestDto;
 import com.sparta.springnewsfeed.domain.user.entity.User;
-import com.sparta.springnewsfeed.global.auth.service.TokenInfoService;
 import com.sparta.springnewsfeed.global.jwt.JwtUtil;
+import com.sparta.springnewsfeed.global.redis.RedisUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -20,13 +20,11 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private final JwtUtil jwtUtil;
-//    private final RedisUtil redisUtil;
-    private final TokenInfoService tokenInfoService;
+    private final RedisUtil redisUtil;
 
-    public JwtAuthenticationFilter(JwtUtil jwtUtil, TokenInfoService tokenInfoService) {
+    public JwtAuthenticationFilter(JwtUtil jwtUtil, RedisUtil redisUtil) {
         this.jwtUtil = jwtUtil;
-//        this.redisUtil = redisUtil;
-        this.tokenInfoService = tokenInfoService;
+        this.redisUtil = redisUtil;
         setFilterProcessesUrl("/api/users/login");
     }
 
@@ -59,8 +57,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         String accessToken = jwtUtil.createAccessToken(user.getUsername());
         String refreshToken = jwtUtil.createRefreshToken();
 
-//        redisUtil.set(refreshToken, user.getId(), 60 * 24 * 14);
-        tokenInfoService.createTokenInfo(refreshToken, user.getId());
+        redisUtil.set(refreshToken, user.getId(), 60 * 24 * 14);
 
         response.addHeader(JwtUtil.ACCESS_TOKEN_HEADER, accessToken);
         response.addHeader(JwtUtil.REFRESH_TOKEN_HEADER, refreshToken);

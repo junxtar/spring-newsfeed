@@ -1,7 +1,7 @@
 package com.sparta.springnewsfeed.global.config;
 
-import com.sparta.springnewsfeed.global.auth.service.TokenInfoService;
 import com.sparta.springnewsfeed.global.jwt.JwtUtil;
+import com.sparta.springnewsfeed.global.redis.RedisUtil;
 import com.sparta.springnewsfeed.global.security.JwtAuthenticationFilter;
 import com.sparta.springnewsfeed.global.security.JwtAuthorizationFilter;
 import com.sparta.springnewsfeed.global.security.UserDetailsServiceImpl;
@@ -25,9 +25,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class WebSecurityConfig {
 
     private final JwtUtil jwtUtil;
+    private final RedisUtil redisUtil;
     private final UserDetailsServiceImpl userDetailsService;
-//    private final RedisUtil redisUtil;
-    private final TokenInfoService tokenInfoService;
     private final AuthenticationConfiguration authenticationConfiguration;
 
     @Bean
@@ -43,14 +42,14 @@ public class WebSecurityConfig {
 
     @Bean
     public JwtAuthenticationFilter jwtAuthenticationFilter() throws Exception {
-        JwtAuthenticationFilter filter = new JwtAuthenticationFilter(jwtUtil, tokenInfoService);
+        JwtAuthenticationFilter filter = new JwtAuthenticationFilter(jwtUtil, redisUtil);
         filter.setAuthenticationManager(authenticationManager(authenticationConfiguration));
         return filter;
     }
 
     @Bean
     public JwtAuthorizationFilter jwtAuthorizationFilter() {
-        return new JwtAuthorizationFilter(jwtUtil, userDetailsService);
+        return new JwtAuthorizationFilter(jwtUtil, redisUtil, userDetailsService);
     }
 
     @Bean
