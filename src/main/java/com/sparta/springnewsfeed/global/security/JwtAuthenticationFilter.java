@@ -57,10 +57,13 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         String accessToken = jwtUtil.createAccessToken(user.getUsername());
         String refreshToken = jwtUtil.createRefreshToken();
 
-        redisUtil.set(refreshToken, user.getId(), 60 * 24 * 14);
-
         response.addHeader(JwtUtil.ACCESS_TOKEN_HEADER, accessToken);
         response.addHeader(JwtUtil.REFRESH_TOKEN_HEADER, refreshToken);
+
+        refreshToken = refreshToken.split(" ")[1].trim();
+
+        redisUtil.set(refreshToken, user.getId(), 60 * 24 * 14);
+
     }
 
     @Override

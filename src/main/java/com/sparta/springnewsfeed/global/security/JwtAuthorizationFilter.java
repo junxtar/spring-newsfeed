@@ -37,19 +37,17 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
         if (StringUtils.hasText(accessToken) && !jwtUtil.validateToken(accessToken)) {
             String refreshToken = jwtUtil.getTokenFromHeader(req, REFRESH_TOKEN_HEADER);
-
             if (StringUtils.hasText(refreshToken) && jwtUtil.validateToken(refreshToken)
                 && redisUtil.hasKey(refreshToken)) {
-
                 Long userId = (Long) redisUtil.get(refreshToken);
-                accessToken = jwtUtil.createAccessToken(userDetailsService.UserById(userId).getUsername())
+                accessToken = jwtUtil.createAccessToken(
+                        userDetailsService.UserById(userId).getUsername())
                     .split(" ")[1].trim();
             }
         }
 
         if (StringUtils.hasText(accessToken)) {
             Claims info = jwtUtil.getUserInfoFromToken(accessToken);
-            log.warn(info.getSubject());
             try {
                 setAuthentication(info.getSubject());
             } catch (Exception e) {
@@ -61,8 +59,6 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         filterChain.doFilter(req, res);
     }
 
-
-    // 인증 처리
     public void setAuthentication(String username) {
         SecurityContext context = SecurityContextHolder.createEmptyContext();
         Authentication authentication = createAuthentication(username);
@@ -71,7 +67,6 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         SecurityContextHolder.setContext(context);
     }
 
-    // 인증 객체 생성
     private Authentication createAuthentication(String username) {
         UserDetails userDetails = userDetailsService.loadUserByUsername(username);
         return new UsernamePasswordAuthenticationToken(userDetails, null,
