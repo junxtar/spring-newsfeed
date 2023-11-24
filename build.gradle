@@ -56,6 +56,9 @@ dependencies {
     //jasypt
     implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.5'
 
+    //redis
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
     //test
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'

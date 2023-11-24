@@ -4,6 +4,8 @@ spring:
     username: ENC(YtfjM5g+s657vr7cfB0F6A==)
     url: ENC(mvJRiAzckZZEDRgpbt/Awl7wv5nUxlJlhygoZ9wfXThViPe3yYt1dW8qrm3cKZ2D)
     password: ENC(j4Lpg8dJwtv/dQJ7moNelGmNBQdk6+R/)
+  main:
+    allow-bean-definition-overriding: true
 
   jpa:
     properties:
@@ -13,6 +15,11 @@ spring:
         show_sql: true
     hibernate:
       ddl-auto: create
+
+  data:
+    redis:
+      host: localhost
+      port: 6379
 
 jwt:
   secret:
