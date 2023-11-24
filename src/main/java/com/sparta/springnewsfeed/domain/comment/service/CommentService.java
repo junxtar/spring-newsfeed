@@ -5,11 +5,13 @@ import com.sparta.springnewsfeed.domain.comment.dto.CommentResponseDto;
 import com.sparta.springnewsfeed.domain.comment.entity.Comment;
 import com.sparta.springnewsfeed.domain.comment.exception.CommentErrorCode;
 import com.sparta.springnewsfeed.domain.comment.exception.CommentExistsException;
+import com.sparta.springnewsfeed.domain.comment.exception.CommonMsg;
 import com.sparta.springnewsfeed.domain.comment.repository.CommentRepository;
 import com.sparta.springnewsfeed.domain.post.entity.Post;
 import com.sparta.springnewsfeed.domain.post.repository.PostRepository;
 import com.sparta.springnewsfeed.domain.user.entity.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -52,12 +54,14 @@ public class CommentService {
     }
 
     @Transactional
-    public void deleteComment(Long postId, Long commentId, User user) {
+    public ResponseEntity<String> deleteComment(Long postId, Long commentId, User user) {
         Post post = checkPost(postId);
         Comment exist = checkComment(commentId);
         Comment authority = checkAuthority(exist, user);
 
         commentRepository.delete(authority);
+
+        return ResponseEntity.ok().body(CommonMsg.COMMENT_DELETE.getMsg());
     }
 
     private Comment checkAuthority(Comment comment, User user) {
