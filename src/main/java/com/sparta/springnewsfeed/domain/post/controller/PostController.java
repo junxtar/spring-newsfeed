@@ -1,8 +1,10 @@
 package com.sparta.springnewsfeed.domain.post.controller;
 
+import com.sparta.springnewsfeed.domain.post.dto.PostMyResponseDto;
 import com.sparta.springnewsfeed.domain.post.dto.PostRequestDto;
 import com.sparta.springnewsfeed.domain.post.dto.PostResponseDto;
 import com.sparta.springnewsfeed.domain.post.dto.SelectPostResponseDto;
+import com.sparta.springnewsfeed.domain.post.dto.UsersPostResponseDto;
 import com.sparta.springnewsfeed.domain.post.service.PostService;
 import com.sparta.springnewsfeed.global.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
@@ -27,23 +29,35 @@ public class PostController {
     }
 
     @GetMapping
-    public ResponseEntity<List<PostResponseDto>> getPostList(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-        List<PostResponseDto> responseDtoList = postService.getPostList(userDetails.getUser());
+    public ResponseEntity<List<PostResponseDto>> getPostList() {
+        List<PostResponseDto> responseDtoList = postService.getPostList();
+        return ResponseEntity.ok().body(responseDtoList);
+    }
+
+    @GetMapping("/mine")
+    public ResponseEntity<List<PostMyResponseDto>> getMyPostList(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        List<PostMyResponseDto> responseDtoList = postService.getMyPostList(userDetails.getUser());
+        return ResponseEntity.ok().body(responseDtoList);
+    }
+
+    @GetMapping("/users")
+    public ResponseEntity<List<UsersPostResponseDto>> getUsersPostList(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        List<UsersPostResponseDto> responseDtoList = postService.getUsersPostList(userDetails.getUser());
         return ResponseEntity.ok().body(responseDtoList);
     }
 
     @PostMapping
-    public ResponseEntity<PostResponseDto> createPost(@RequestBody PostRequestDto requestDto,
+    public ResponseEntity<PostMyResponseDto> createPost(@RequestBody PostRequestDto requestDto,
                                                       @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        PostResponseDto responseDto = postService.createPost(requestDto, userDetails.getUser());
+        PostMyResponseDto responseDto = postService.createPost(requestDto, userDetails.getUser());
         return ResponseEntity.status(201).body(responseDto);
     }
 
     @PutMapping("/{postId}")
-    public ResponseEntity<PostResponseDto> updatePost(@PathVariable Long postId,
+    public ResponseEntity<PostMyResponseDto> updatePost(@PathVariable Long postId,
                                                       @RequestBody PostRequestDto requestDto,
                                                       @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        PostResponseDto responseDto = postService.updatePost(postId, requestDto, userDetails.getUser());
+        PostMyResponseDto responseDto = postService.updatePost(postId, requestDto, userDetails.getUser());
         return ResponseEntity.ok().body(responseDto);
     }
 
