@@ -1,11 +1,11 @@
 package com.sparta.springnewsfeed.domain.post.entity;
 
 import com.sparta.springnewsfeed.domain.comment.entity.Comment;
+import com.sparta.springnewsfeed.domain.heart.Heart;
 import com.sparta.springnewsfeed.domain.post.dto.PostRequestDto;
 import com.sparta.springnewsfeed.domain.user.entity.User;
 import com.sparta.springnewsfeed.global.util.BaseTime;
 import jakarta.persistence.*;
-import java.util.ArrayList;
 import lombok.*;
 
 import java.util.List;
@@ -28,6 +28,8 @@ public class Post extends BaseTime {
     @Column(nullable = false)
     private String content;
 
+    private Long heartCnt;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
@@ -36,9 +38,10 @@ public class Post extends BaseTime {
     List<Comment> commentList;
 
     @Builder
-    public Post(String title, String content, User user) {
+    public Post(String title, String content, Long heartCnt, User user) {
         this.title = title;
         this.content = content;
+        this.heartCnt = heartCnt;
         this.user = user;
     }
 
@@ -46,10 +49,12 @@ public class Post extends BaseTime {
         this.title = requestDto.getTitle();
         this.content = requestDto.getContent();
     }
-    public List<Comment> getCommentList() {
-        if (commentList.size() == 0) {
-            commentList = new ArrayList<>();
-        }
-        return commentList;
+
+    public void upHeartCnt() {
+        this.heartCnt++;
+    }
+
+    public void downHeartCnt() {
+        this.heartCnt--;
     }
 }

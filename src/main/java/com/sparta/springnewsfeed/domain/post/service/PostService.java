@@ -1,5 +1,7 @@
 package com.sparta.springnewsfeed.domain.post.service;
 
+import static com.sparta.springnewsfeed.domain.post.constant.PostConstant.DEFAULT_HEART_COUNT;
+
 import com.sparta.springnewsfeed.domain.comment.dto.CommentResponseDto;
 import com.sparta.springnewsfeed.domain.comment.entity.Comment;
 import com.sparta.springnewsfeed.domain.post.dto.PostMyResponseDto;
@@ -64,6 +66,7 @@ public class PostService {
         Post savePost = Post.builder()
             .title(requestDto.getTitle())
             .content(requestDto.getContent())
+            .heartCnt(DEFAULT_HEART_COUNT)
             .user(user)
             .build();
         postRepository.save(savePost);
