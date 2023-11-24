@@ -1,5 +1,6 @@
 package com.sparta.springnewsfeed.global.config;
 
+import com.sparta.springnewsfeed.global.auth.service.TokenInfoService;
 import com.sparta.springnewsfeed.global.jwt.JwtUtil;
 import com.sparta.springnewsfeed.global.security.JwtAuthenticationFilter;
 import com.sparta.springnewsfeed.global.security.JwtAuthorizationFilter;
@@ -25,6 +26,8 @@ public class WebSecurityConfig {
 
     private final JwtUtil jwtUtil;
     private final UserDetailsServiceImpl userDetailsService;
+//    private final RedisUtil redisUtil;
+    private final TokenInfoService tokenInfoService;
     private final AuthenticationConfiguration authenticationConfiguration;
 
     @Bean
@@ -40,7 +43,7 @@ public class WebSecurityConfig {
 
     @Bean
     public JwtAuthenticationFilter jwtAuthenticationFilter() throws Exception {
-        JwtAuthenticationFilter filter = new JwtAuthenticationFilter(jwtUtil);
+        JwtAuthenticationFilter filter = new JwtAuthenticationFilter(jwtUtil, tokenInfoService);
         filter.setAuthenticationManager(authenticationManager(authenticationConfiguration));
         return filter;
     }
@@ -65,7 +68,7 @@ public class WebSecurityConfig {
                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations())
                 .permitAll() // resources 접근 허용 설정
                 .requestMatchers("/api/**").permitAll() // 메인 페이지 요청 허가
-                .requestMatchers("/api/users/**").permitAll() // '/api/user/'로 시작하는 요청 모두 접근 허가
+                .requestMatchers("/api/users/signup").permitAll() // '/api/user/'로 시작하는 요청 모두 접근 허가
                 .anyRequest().authenticated() // 그 외 모든 요청 인증처리
         );
 

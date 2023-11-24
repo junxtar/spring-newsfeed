@@ -1,11 +1,16 @@
 package com.sparta.springnewsfeed.global.security;
 
+import static com.sparta.springnewsfeed.global.jwt.JwtUtil.ACCESS_TOKEN_HEADER;
+import static com.sparta.springnewsfeed.global.jwt.JwtUtil.REFRESH_TOKEN_HEADER;
+
 import com.sparta.springnewsfeed.global.jwt.JwtUtil;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -15,34 +20,34 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import java.io.IOException;
-
 @Slf4j(topic = "JWT 검증 및 인가")
+@RequiredArgsConstructor
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
     private final UserDetailsServiceImpl userDetailsService;
 
-    public JwtAuthorizationFilter(JwtUtil jwtUtil, UserDetailsServiceImpl userDetailsService) {
-        this.jwtUtil = jwtUtil;
-        this.userDetailsService = userDetailsService;
-    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res,
-                                    FilterChain filterChain) throws ServletException, IOException {
+        FilterChain filterChain) throws ServletException, IOException {
 
-        String tokenValue = jwtUtil.getJwtFromHeader(req);
+        String accessToken = jwtUtil.getTokenFromHeader(req, ACCESS_TOKEN_HEADER);
 
-        if (StringUtils.hasText(tokenValue)) {
-
-            if (!jwtUtil.validateToken(tokenValue)) {
-                log.error("Token Error");
-                return;
+        if (StringUtils.hasText(accessToken)) {
+            if (!jwtUtil.validateToken(accessToken)) {
+                String refreshToken = jwtUtil.getTokenFromHeader(req, REFRESH_TOKEN_HEADER);
+                if (StringUtils.hasText(refreshToken)) {
+                    if (jwtUtil.validateToken(refreshToken)) {
+                        //TODO:한번더 redis 검증-true
+                        accessToken = jwtUtil.createAccessToken(
+                            jwtUtil.getIdFromToken(refreshToken)).split(" ")[1].trim();
+                        log.warn("ref: "+jwtUtil.getUserInfoFromToken(refreshToken));
+                    }
+                }
             }
-
-            Claims info = jwtUtil.getUserInfoFromToken(tokenValue);
-
+            Claims info = jwtUtil.getUserInfoFromToken(accessToken);
+            log.warn(info.getSubject());
             try {
                 setAuthentication(info.getSubject());
             } catch (Exception e) {
@@ -53,6 +58,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
         filterChain.doFilter(req, res);
     }
+
 
     // 인증 처리
     public void setAuthentication(String username) {
