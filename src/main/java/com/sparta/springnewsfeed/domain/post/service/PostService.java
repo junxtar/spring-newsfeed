@@ -73,7 +73,7 @@ public class PostService {
 
     private void findByUsername(Post post, String username) {
         if (!post.getUser().getUsername().equals(username)) {
-            throw new PostExistsException(PostErrorCode.NOT_EXISTS_USER);
+            throw new PostExistsException(PostErrorCode.NOT_PERMISSION);
         }
     }
 
