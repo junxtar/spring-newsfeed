@@ -4,7 +4,7 @@ import static com.sparta.springnewsfeed.global.jwt.JwtUtil.ACCESS_TOKEN_HEADER;
 import static com.sparta.springnewsfeed.global.jwt.JwtUtil.REFRESH_TOKEN_HEADER;
 
 import com.sparta.springnewsfeed.global.jwt.JwtUtil;
-import com.sparta.springnewsfeed.global.redis.RedisUtil;
+import com.sparta.springnewsfeed.domain.redis.RedisUtil;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

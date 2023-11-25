@@ -1,10 +1,10 @@
 package com.sparta.springnewsfeed.domain.post.entity;
 
 import com.sparta.springnewsfeed.domain.comment.entity.Comment;
-import com.sparta.springnewsfeed.domain.heart.Heart;
+import com.sparta.springnewsfeed.domain.heart.entity.Heart;
 import com.sparta.springnewsfeed.domain.post.dto.PostRequestDto;
 import com.sparta.springnewsfeed.domain.user.entity.User;
-import com.sparta.springnewsfeed.global.util.BaseTime;
+import com.sparta.springnewsfeed.domain.utils.BaseTime;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -37,6 +37,9 @@ public class Post extends BaseTime {
     @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
     List<Comment> commentList;
 
+    @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
+    List<Heart> heartList;
+
     @Builder
     public Post(String title, String content, Long heartCnt, User user) {
         this.title = title;
@@ -50,11 +53,11 @@ public class Post extends BaseTime {
         this.content = requestDto.getContent();
     }
 
-    public void upHeartCnt() {
-        this.heartCnt++;
-    }
-
-    public void downHeartCnt() {
+    public void updateHeartCnt(boolean updated) {
+        if (updated) {
+            this.heartCnt++;
+            return;
+        }
         this.heartCnt--;
     }
 }

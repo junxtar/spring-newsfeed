@@ -1,4 +1,4 @@
-package com.sparta.springnewsfeed.global.redis;
+package com.sparta.springnewsfeed.domain.redis;
 
 import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;

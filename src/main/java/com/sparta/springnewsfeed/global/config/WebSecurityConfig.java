@@ -1,7 +1,7 @@
 package com.sparta.springnewsfeed.global.config;
 
 import com.sparta.springnewsfeed.global.jwt.JwtUtil;
-import com.sparta.springnewsfeed.global.redis.RedisUtil;
+import com.sparta.springnewsfeed.domain.redis.RedisUtil;
 import com.sparta.springnewsfeed.global.security.JwtAuthenticationFilter;
 import com.sparta.springnewsfeed.global.security.JwtAuthorizationFilter;
 import com.sparta.springnewsfeed.global.security.UserDetailsServiceImpl;
