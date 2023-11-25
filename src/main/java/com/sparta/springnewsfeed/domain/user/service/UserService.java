@@ -13,7 +13,7 @@ import com.sparta.springnewsfeed.domain.user.exception.PasswordIsNotMatchExcepti
 import com.sparta.springnewsfeed.domain.user.exception.RejectedUserExecutionException;
 import com.sparta.springnewsfeed.domain.user.exception.UserErrorCode;
 import com.sparta.springnewsfeed.domain.user.repository.UserRepository;
-import com.sparta.springnewsfeed.global.redis.RedisUtil;
+import com.sparta.springnewsfeed.domain.redis.RedisUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
