@@ -1,4 +1,4 @@
-package com.sparta.springnewsfeed.global.redis;
+package com.sparta.springnewsfeed.domain.redis;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

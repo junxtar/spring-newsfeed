@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sparta.springnewsfeed.domain.user.dto.UserLoginRequestDto;
 import com.sparta.springnewsfeed.domain.user.entity.User;
 import com.sparta.springnewsfeed.global.jwt.JwtUtil;
-import com.sparta.springnewsfeed.global.redis.RedisUtil;
+import com.sparta.springnewsfeed.domain.redis.RedisUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

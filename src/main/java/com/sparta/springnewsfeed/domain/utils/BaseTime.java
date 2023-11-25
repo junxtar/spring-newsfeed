@@ -1,4 +1,4 @@
-package com.sparta.springnewsfeed.global.util;
+package com.sparta.springnewsfeed.domain.utils;
 
 import jakarta.persistence.*;
 import lombok.Getter;
