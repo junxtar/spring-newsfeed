@@ -1,4 +1,4 @@
-package com.sparta.springnewsfeed.domain.heart;
+package com.sparta.springnewsfeed.domain.heart.entity;
 
 import com.sparta.springnewsfeed.domain.post.entity.Post;
 import com.sparta.springnewsfeed.domain.user.entity.User;
@@ -9,22 +9,20 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@Setter
-@Table(name = "heart")
-@RequiredArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Heart {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private Boolean isHearted;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
@@ -35,10 +33,16 @@ public class Heart {
     private Post post;
 
     @Builder
-    public Heart(User user, Post post) {
+    private Heart(Long id, Boolean isHearted, User user, Post post) {
+        this.id = id;
+        this.isHearted = isHearted;
         this.user = user;
         this.post = post;
+    }
 
+    public Boolean updateHeart() {
+        this.isHearted = !isHearted;
+        return this.isHearted;
     }
 
 }

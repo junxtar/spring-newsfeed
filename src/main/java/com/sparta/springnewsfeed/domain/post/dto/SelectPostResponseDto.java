@@ -5,10 +5,13 @@ import com.sparta.springnewsfeed.domain.post.entity.Post;
 import com.sparta.springnewsfeed.domain.user.entity.User;
 import java.time.LocalDateTime;
 import java.util.List;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class SelectPostResponseDto {
 
     private String title;
@@ -19,7 +22,7 @@ public class SelectPostResponseDto {
     private List<CommentResponseDto> commentList;
 
     @Builder
-    public SelectPostResponseDto(String title, String content, String username, Long heartCnt,
+    private SelectPostResponseDto(String title, String content, String username, Long heartCnt,
         LocalDateTime createdAt, List<CommentResponseDto> commentList) {
         this.title = title;
         this.content = content;
@@ -40,5 +43,4 @@ public class SelectPostResponseDto {
             .commentList(responseListDtoList)
             .build();
     }
-
 }
