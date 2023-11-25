@@ -1,11 +1,17 @@
 package com.sparta.springnewsfeed.global.security;
 
+import static com.sparta.springnewsfeed.global.jwt.JwtUtil.ACCESS_TOKEN_HEADER;
+import static com.sparta.springnewsfeed.global.jwt.JwtUtil.REFRESH_TOKEN_HEADER;
+
 import com.sparta.springnewsfeed.global.jwt.JwtUtil;
+import com.sparta.springnewsfeed.global.redis.RedisUtil;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -15,34 +21,33 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import java.io.IOException;
-
 @Slf4j(topic = "JWT 검증 및 인가")
+@RequiredArgsConstructor
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
+    private final RedisUtil redisUtil;
     private final UserDetailsServiceImpl userDetailsService;
-
-    public JwtAuthorizationFilter(JwtUtil jwtUtil, UserDetailsServiceImpl userDetailsService) {
-        this.jwtUtil = jwtUtil;
-        this.userDetailsService = userDetailsService;
-    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res,
-                                    FilterChain filterChain) throws ServletException, IOException {
+        FilterChain filterChain) throws ServletException, IOException {
 
-        String tokenValue = jwtUtil.getJwtFromHeader(req);
+        String accessToken = jwtUtil.getTokenFromHeader(req, ACCESS_TOKEN_HEADER);
 
-        if (StringUtils.hasText(tokenValue)) {
-
-            if (!jwtUtil.validateToken(tokenValue)) {
-                log.error("Token Error");
-                return;
+        if (StringUtils.hasText(accessToken) && !jwtUtil.validateToken(accessToken)) {
+            String refreshToken = jwtUtil.getTokenFromHeader(req, REFRESH_TOKEN_HEADER);
+            if (StringUtils.hasText(refreshToken) && jwtUtil.validateToken(refreshToken)
+                && redisUtil.hasKey(refreshToken)) {
+                Long userId = (Long) redisUtil.get(refreshToken);
+                accessToken = jwtUtil.createAccessToken(
+                        userDetailsService.UserById(userId).getUsername())
+                    .split(" ")[1].trim();
             }
+        }
 
-            Claims info = jwtUtil.getUserInfoFromToken(tokenValue);
-
+        if (StringUtils.hasText(accessToken)) {
+            Claims info = jwtUtil.getUserInfoFromToken(accessToken);
             try {
                 setAuthentication(info.getSubject());
             } catch (Exception e) {
@@ -54,7 +59,6 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         filterChain.doFilter(req, res);
     }
 
-    // 인증 처리
     public void setAuthentication(String username) {
         SecurityContext context = SecurityContextHolder.createEmptyContext();
         Authentication authentication = createAuthentication(username);
@@ -63,7 +67,6 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         SecurityContextHolder.setContext(context);
     }
 
-    // 인증 객체 생성
     private Authentication createAuthentication(String username) {
         UserDetails userDetails = userDetailsService.loadUserByUsername(username);
         return new UsernamePasswordAuthenticationToken(userDetails, null,

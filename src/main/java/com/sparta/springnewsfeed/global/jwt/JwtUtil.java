@@ -17,11 +17,14 @@ import java.util.Date;
 @Component
 public class JwtUtil {
 
-    public static final String AUTHORIZATION_HEADER = "Authorization";
+    public static final String ACCESS_TOKEN_HEADER = "AccessToken";
+    public static final String REFRESH_TOKEN_HEADER = "RefreshToken";
     public static final String AUTHORIZATION_KEY = "auth";
     public static final String BEARER_PREFIX = "Bearer ";
-    private final long TOKEN_TIME = 60 * 60 * 1000L;
-    @Value("${jwt.secret.key}") // Base64 Encode 한 SecretKey
+    private final long ACCESS_TOKEN_TIME = 60 * 30 * 1000L;
+    private final long REFRESH_TOKEN_TIME = 60 * 60 * 1000L * 24 * 14;
+
+    @Value("${jwt.secret.key}")
     private String secretKey;
     private Key key;
     private final SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
@@ -32,23 +35,34 @@ public class JwtUtil {
         key = Keys.hmacShaKeyFor(bytes);
     }
 
-    public String createToken(String username) {
+    public String createAccessToken(String username) {
         Date date = new Date();
 
         return BEARER_PREFIX +
             Jwts.builder()
-                .setSubject(username) // 사용자 식별자값(ID)
-                .claim(AUTHORIZATION_KEY, username) // 사용자 권한
-                .setExpiration(new Date(date.getTime() + TOKEN_TIME)) // 만료 시간
-                .setIssuedAt(date) // 발급일
-                .signWith(key, signatureAlgorithm) // 암호화 알고리즘
+                .setSubject(username)
+                .claim(AUTHORIZATION_KEY, username)
+                .setExpiration(new Date(date.getTime() + ACCESS_TOKEN_TIME))
+                .setIssuedAt(date)
+                .signWith(key, signatureAlgorithm)
                 .compact();
     }
 
-    public String getJwtFromHeader(HttpServletRequest request) {
-        String bearerToken = request.getHeader(AUTHORIZATION_HEADER);
-        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(BEARER_PREFIX)) {
-            return bearerToken.substring(7);
+    public String createRefreshToken() {
+        Date date = new Date();
+
+        return BEARER_PREFIX +
+            Jwts.builder()
+                .setExpiration(new Date(date.getTime() + REFRESH_TOKEN_TIME))
+                .setIssuedAt(date)
+                .signWith(key, signatureAlgorithm)
+                .compact();
+    }
+
+    public String getTokenFromHeader(HttpServletRequest request, String tokenType) {
+        String token = request.getHeader(tokenType);
+        if (StringUtils.hasText(token) && token.startsWith(BEARER_PREFIX)) {
+            return token.split(" ")[1].trim();
         }
         return null;
     }
