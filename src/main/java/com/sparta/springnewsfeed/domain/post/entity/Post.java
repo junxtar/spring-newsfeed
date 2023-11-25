@@ -5,15 +5,25 @@ import com.sparta.springnewsfeed.domain.heart.entity.Heart;
 import com.sparta.springnewsfeed.domain.post.dto.PostRequestDto;
 import com.sparta.springnewsfeed.domain.user.entity.User;
 import com.sparta.springnewsfeed.domain.utils.BaseTime;
-import jakarta.persistence.*;
-import lombok.*;
-
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import java.util.ArrayList;
 import java.util.List;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@Setter
-@Table(name = "post")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Post extends BaseTime {
 
@@ -38,7 +48,7 @@ public class Post extends BaseTime {
     List<Comment> commentList;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
-    List<Heart> heartList;
+    List<Heart> heartList = new ArrayList<>();
 
     @Builder
     public Post(String title, String content, Long heartCnt, User user) {
