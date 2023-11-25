@@ -2,7 +2,6 @@ package com.sparta.springnewsfeed.domain.post.dto;
 
 import com.sparta.springnewsfeed.domain.comment.dto.CommentResponseDto;
 import com.sparta.springnewsfeed.domain.post.entity.Post;
-import com.sparta.springnewsfeed.domain.user.entity.User;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.AccessLevel;
@@ -18,28 +17,31 @@ public class SelectPostResponseDto {
     private String content;
     private Long heartCnt;
     private String username;
+    private Boolean isHearted;
     private LocalDateTime createdAt;
     private List<CommentResponseDto> commentList;
 
     @Builder
-    private SelectPostResponseDto(String title, String content, String username, Long heartCnt,
-        LocalDateTime createdAt, List<CommentResponseDto> commentList) {
+    private SelectPostResponseDto(String title, String content, Long heartCnt, String username,
+        Boolean isHearted, LocalDateTime createdAt, List<CommentResponseDto> commentList) {
         this.title = title;
         this.content = content;
         this.heartCnt = heartCnt;
         this.username = username;
+        this.isHearted = isHearted;
         this.createdAt = createdAt;
         this.commentList = commentList;
     }
 
-    public static SelectPostResponseDto of(Post post, User user,
+    public static SelectPostResponseDto of(Post post, Boolean isHearted,
         List<CommentResponseDto> responseListDtoList) {
         return SelectPostResponseDto.builder()
             .title(post.getTitle())
             .content(post.getContent())
             .heartCnt(post.getHeartCnt())
+            .username(post.getUser().getUsername())
+            .isHearted(isHearted)
             .createdAt(post.getCreatedAt())
-            .username(user.getUsername())
             .commentList(responseListDtoList)
             .build();
     }

@@ -25,20 +25,20 @@ public class PostController {
     public ResponseEntity<SelectPostResponseDto> getPost(@PathVariable Long postId,
         @AuthenticationPrincipal UserDetailsImpl userDetails) {
         SelectPostResponseDto responseDto = postService.getPost(postId, userDetails.getUser());
-        return ResponseEntity.ok().body(responseDto);
+        return ResponseEntity.ok(responseDto);
     }
 
     @GetMapping
-    public ResponseEntity<List<PostResponseDto>> getPostList() {
-        List<PostResponseDto> responseDtoList = postService.getPostList();
-        return ResponseEntity.ok().body(responseDtoList);
+    public ResponseEntity<List<PostResponseDto>> getPostList(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        List<PostResponseDto> responseDtoList = postService.getPostList(userDetails.getUser());
+        return ResponseEntity.ok(responseDtoList);
     }
 
     @GetMapping("/mine")
     public ResponseEntity<List<PostMyResponseDto>> getMyPostList(
         @AuthenticationPrincipal UserDetailsImpl userDetails) {
         List<PostMyResponseDto> responseDtoList = postService.getMyPostList(userDetails.getUser());
-        return ResponseEntity.ok().body(responseDtoList);
+        return ResponseEntity.ok(responseDtoList);
     }
 
     @GetMapping("/users")
@@ -46,7 +46,7 @@ public class PostController {
         @AuthenticationPrincipal UserDetailsImpl userDetails) {
         List<UsersPostResponseDto> responseDtoList = postService.getUsersPostList(
             userDetails.getUser());
-        return ResponseEntity.ok().body(responseDtoList);
+        return ResponseEntity.ok(responseDtoList);
     }
 
     @PostMapping
