@@ -1,21 +1,41 @@
 package com.sparta.springnewsfeed.domain.user.service;
 
-import com.sparta.springnewsfeed.domain.user.dto.*;
-import com.sparta.springnewsfeed.domain.user.entity.*;
-import com.sparta.springnewsfeed.domain.user.exception.*;
-import com.sparta.springnewsfeed.domain.user.repository.*;
-import java.util.*;
-import lombok.*;
-import org.springframework.security.crypto.password.*;
-import org.springframework.stereotype.*;
+import static com.sparta.springnewsfeed.global.jwt.JwtUtil.REFRESH_TOKEN_HEADER;
+
+import com.sparta.springnewsfeed.domain.user.dto.UserModifyPasswordRequestDto;
+import com.sparta.springnewsfeed.domain.user.dto.UserResponseDto;
+import com.sparta.springnewsfeed.domain.user.dto.UserSignupRequestDto;
+import com.sparta.springnewsfeed.domain.user.dto.UserUpdateProfileRequestDto;
+import com.sparta.springnewsfeed.domain.user.entity.User;
+import com.sparta.springnewsfeed.domain.user.exception.AlreadyExistUserException;
+import com.sparta.springnewsfeed.domain.user.exception.NonUserExsistException;
+import com.sparta.springnewsfeed.domain.user.exception.PasswordIsNotMatchException;
+import com.sparta.springnewsfeed.domain.user.exception.RejectedUserExecutionException;
+import com.sparta.springnewsfeed.domain.user.exception.UserErrorCode;
+import com.sparta.springnewsfeed.domain.user.repository.UserRepository;
+import com.sparta.springnewsfeed.global.redis.RedisUtil;
+import jakarta.servlet.http.HttpServletRequest;
+import java.util.Optional;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class UserService {
 
     private final UserRepository userRepository;
+    private final RedisUtil redisUtil;
     private final PasswordEncoder passwordEncoder;
 
+    public UserResponseDto getProfile(Long userId) {
+        User targetUser = existId(userId);
+        return UserResponseDto.of(targetUser);
+    }
+
+    @Transactional
     public void signup(UserSignupRequestDto requestDto) {
         String username = requestDto.getUsername();
         String password = passwordEncoder.encode(requestDto.getPassword());
@@ -30,20 +50,17 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public UserResponseDto getProfile(Long userId) {
-        User targetUser = existId(userId);
-        return UserResponseDto.of(targetUser);
-    }
-
+    @Transactional
     public UserResponseDto updateProfile(Long userId, UserUpdateProfileRequestDto requestDto,
         User user) {
         User targetProfile = targetId(userId, user);
         targetProfile.setContent(requestDto.getContent());
-        userRepository.save(targetProfile);
+
         return UserResponseDto.of(targetProfile);
     }
 
-    public UserModifyPasswordResponse modifyPassword(Long userId,
+    @Transactional
+    public void modifyPassword(Long userId,
         UserModifyPasswordRequestDto requestDto,
         User user) {
         User targetUser = targetId(userId, user);
@@ -51,12 +68,16 @@ public class UserService {
             targetUser.getPassword())) {
             throw new PasswordIsNotMatchException(UserErrorCode.PASSWORD_IS_NOT_MATCH);
         }
+
         targetUser.setPassword(passwordEncoder.encode(requestDto.getNewPassword()));
-        userRepository.save(targetUser);
-        return new UserModifyPasswordResponse(targetUser);
     }
 
-    ///////////////////////////////////////////////////////
+    @Transactional
+    public void logout(HttpServletRequest request) {
+        String refreshToken = extractRefreshToken(request);
+        redisUtil.delete(refreshToken);
+    }
+
     private User targetId(Long userId, User user) {
         User targetUser = existId(userId);
         if (!user.getUsername().equals(targetUser.getUsername())) {
@@ -69,5 +90,10 @@ public class UserService {
         return userRepository.findById(userId)
             .orElseThrow(() -> new NonUserExsistException(UserErrorCode.NON_USER_EXSIST));
     }
-    ///////////////////////////////////////////////////////
+
+    private String extractRefreshToken(HttpServletRequest request) {
+        return request.getHeader(REFRESH_TOKEN_HEADER)
+            .split(" ")[1]
+            .trim();
+    }
 }
