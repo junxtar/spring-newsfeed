@@ -4,6 +4,7 @@ import com.sparta.springnewsfeed.domain.user.dto.*;
 import com.sparta.springnewsfeed.domain.user.service.*;
 import com.sparta.springnewsfeed.global.common.*;
 import com.sparta.springnewsfeed.global.security.*;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.*;
 import lombok.*;
 import org.springframework.http.*;
@@ -20,7 +21,7 @@ public class UserController {
     @GetMapping("/profile/{userId}")
     public ResponseEntity<UserResponseDto> getProfile(@PathVariable Long userId) {
         UserResponseDto userResponseDto = userService.getProfile(userId);
-        return ResponseEntity.ok().body(userResponseDto);
+        return ResponseEntity.ok(userResponseDto);
     }
 
     @PostMapping("/signup")
@@ -35,18 +36,23 @@ public class UserController {
         @AuthenticationPrincipal UserDetailsImpl userDetails) {
         UserResponseDto userResponseDto = userService.updateProfile(userId, requestDto,
             userDetails.getUser());
-        return ResponseEntity.status(201).body(userResponseDto);
+        return ResponseEntity.ok(userResponseDto);
     }
 
-    @PutMapping("/{userId}/password")
-    public ResponseEntity<UserModifyPasswordResponse> modifyPassword(@PathVariable Long userId,
+    @PutMapping("/password/{userId}")
+    public ResponseEntity<String> modifyPassword(@PathVariable Long userId,
         @Valid @RequestBody UserModifyPasswordRequestDto requestDto,
         @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        UserModifyPasswordResponse userResponseDto = userService.modifyPassword(userId, requestDto,
+        userService.modifyPassword(userId, requestDto,
             userDetails.getUser());
-        return ResponseEntity.ok().body(userResponseDto);
+        return ResponseEntity.ok(CommonCode.OK.getMessage());
     }
 
-    //TODO:로그아웃
+    @GetMapping("/logout")
+    public ResponseEntity<Void> logout(HttpServletRequest request) {
+        userService.logout(request);
+
+        return ResponseEntity.noContent().build();
+    }
 
 }
