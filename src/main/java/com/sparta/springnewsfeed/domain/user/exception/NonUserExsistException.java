@@ -2,10 +2,9 @@ package com.sparta.springnewsfeed.domain.user.exception;
 
 import com.sparta.springnewsfeed.global.exception.*;
 
-public class AlreadyExsistUserException extends RestApiException {
+public class NonUserExsistException extends RestApiException {
 
-    public AlreadyExsistUserException(ErrorCode errorCode) {
+    public NonUserExsistException(ErrorCode errorCode) {
         super(errorCode);
     }
-
 }

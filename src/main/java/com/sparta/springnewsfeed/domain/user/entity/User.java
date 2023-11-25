@@ -4,6 +4,7 @@ import com.sparta.springnewsfeed.domain.post.entity.*;
 import jakarta.persistence.*;
 import java.util.*;
 import lombok.*;
+import org.springframework.security.crypto.password.*;
 
 @Entity
 @Getter
@@ -24,6 +25,10 @@ public class User {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     @Builder

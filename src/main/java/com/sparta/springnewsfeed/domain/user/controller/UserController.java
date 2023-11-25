@@ -8,17 +8,15 @@ import jakarta.validation.*;
 import lombok.*;
 import org.springframework.http.*;
 import org.springframework.security.core.annotation.*;
-import org.springframework.stereotype.*;
 import org.springframework.web.bind.annotation.*;
 
-@Controller
+@RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/users")
 public class UserController {
 
     private final UserService userService;
 
-    //TODO:프로필 조회
     @GetMapping("/profile/{userId}")
     public ResponseEntity<UserResponseDto> getProfile(@PathVariable Long userId) {
         UserResponseDto userResponseDto = userService.getProfile(userId);
@@ -33,7 +31,6 @@ public class UserController {
 
     @PatchMapping("/profile/{userId}")
     public ResponseEntity<UserResponseDto> updateProfile(@PathVariable Long userId,
-        //TODO:프로필 수정
         @RequestBody UserUpdateProfileRequestDto requestDto,
         @AuthenticationPrincipal UserDetailsImpl userDetails) {
         UserResponseDto userResponseDto = userService.updateProfile(userId, requestDto,
@@ -41,9 +38,15 @@ public class UserController {
         return ResponseEntity.status(201).body(userResponseDto);
     }
 
+    @PutMapping("/{userId}/password")
+    public ResponseEntity<UserModifyPasswordResponse> modifyPassword(@PathVariable Long userId,
+        @Valid @RequestBody UserModifyPasswordRequestDto requestDto,
+        @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        UserModifyPasswordResponse userResponseDto = userService.modifyPassword(userId, requestDto,
+            userDetails.getUser());
+        return ResponseEntity.ok().body(userResponseDto);
+    }
+
     //TODO:로그아웃
-
-    //TODO:비밀번호 수정 *보류*
-
 
 }
