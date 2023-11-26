@@ -27,7 +27,7 @@ public class LikeService {
     private final LikeRepository likeRepository;
 
     @Transactional
-    public LikeResponseDto pressLike(User user, Long commentId, Long postId) {
+    public LikeResponseDto pressLike(User user, Long postId, Long commentId) {
         Post post = checkPost(postId);
         Comment comment = checkComment(commentId);
 
