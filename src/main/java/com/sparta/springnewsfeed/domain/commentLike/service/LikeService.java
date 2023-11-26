@@ -1,7 +1,5 @@
 package com.sparta.springnewsfeed.domain.commentLike.service;
 
-import static com.sparta.springnewsfeed.domain.commentLike.Constant.LikeConstant.DEFAULT_LIKE;
-
 import com.sparta.springnewsfeed.domain.comment.entity.Comment;
 import com.sparta.springnewsfeed.domain.comment.exception.CommentErrorCode;
 import com.sparta.springnewsfeed.domain.comment.exception.CommentExistsException;
@@ -16,6 +14,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import static com.sparta.springnewsfeed.domain.commentLike.Constant.LikeConstant.DEFAULT_LIKE;
+
 
 @Service
 @RequiredArgsConstructor
@@ -27,7 +27,7 @@ public class LikeService {
     private final LikeRepository likeRepository;
 
     @Transactional
-    public LikeResponseDto pressLike(User user, Long commentId, Long postId) {
+    public LikeResponseDto pressLike(User user, Long postId, Long commentId) {
         Post post = checkPost(postId);
         Comment comment = checkComment(commentId);
 
