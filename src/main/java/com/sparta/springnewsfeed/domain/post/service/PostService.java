@@ -1,7 +1,11 @@
 package com.sparta.springnewsfeed.domain.post.service;
 
+import static com.sparta.springnewsfeed.domain.heart.constant.HeartConstant.DEFAULT_HEART;
+import static com.sparta.springnewsfeed.domain.post.constant.PostConstant.DEFAULT_HEART_COUNT;
+
 import com.sparta.springnewsfeed.domain.comment.dto.CommentResponseDto;
 import com.sparta.springnewsfeed.domain.comment.entity.Comment;
+import com.sparta.springnewsfeed.domain.heart.entity.Heart;
 import com.sparta.springnewsfeed.domain.post.dto.PostMyResponseDto;
 import com.sparta.springnewsfeed.domain.post.dto.PostRequestDto;
 import com.sparta.springnewsfeed.domain.post.dto.PostResponseDto;
@@ -12,12 +16,12 @@ import com.sparta.springnewsfeed.domain.post.exception.PostErrorCode;
 import com.sparta.springnewsfeed.domain.post.exception.PostExistsException;
 import com.sparta.springnewsfeed.domain.post.repository.PostRepository;
 import com.sparta.springnewsfeed.domain.user.entity.User;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -29,34 +33,30 @@ public class PostService {
     public SelectPostResponseDto getPost(Long postId, User user) {
         Post post = findById(postId);
         List<CommentResponseDto> commentResponseDtoList = commentList(post);
-        return SelectPostResponseDto.of(post, user, commentResponseDtoList);
+        Boolean isHearted = getHearted(user, post);
+
+        return SelectPostResponseDto.of(post, isHearted, commentResponseDtoList);
     }
 
-    public List<PostResponseDto> getPostList() {
+    public List<PostResponseDto> getPostList(User user) {
         List<Post> postList = postRepository.findAllByOrderByCreatedAtDesc();
-        List<PostResponseDto> responseDtoList = new ArrayList<>();
-        for (Post post : postList) {
-            responseDtoList.add(PostResponseDto.of(post));
-        }
-        return responseDtoList;
+        return postList.stream()
+            .map(post -> PostResponseDto.of(post, getHearted(user, post)))
+            .collect(Collectors.toList());
     }
 
     public List<PostMyResponseDto> getMyPostList(User user) {
         List<Post> postList = postRepository.findAllByUserOrderByCreatedAtDesc(user);
-        List<PostMyResponseDto> responseDtoList = new ArrayList<>();
-        for (Post post : postList) {
-            responseDtoList.add(PostMyResponseDto.of(post, user));
-        }
-        return responseDtoList;
+        return postList.stream()
+            .map(post -> PostMyResponseDto.of(post, getHearted(user, post)))
+            .collect(Collectors.toList());
     }
 
     public List<UsersPostResponseDto> getUsersPostList(User user) {
         List<Post> postList = postRepository.findAllByUserNotOrderByCreatedAtDesc(user);
-        List<UsersPostResponseDto> responseDtoList = new ArrayList<>();
-        for (Post post : postList) {
-            responseDtoList.add(UsersPostResponseDto.of(post));
-        }
-        return responseDtoList;
+        return postList.stream()
+            .map(post -> UsersPostResponseDto.of(post, getHearted(user, post)))
+            .collect(Collectors.toList());
     }
 
     @Transactional
@@ -64,10 +64,13 @@ public class PostService {
         Post savePost = Post.builder()
             .title(requestDto.getTitle())
             .content(requestDto.getContent())
+            .heartCnt(DEFAULT_HEART_COUNT)
             .user(user)
             .build();
+
         postRepository.save(savePost);
-        return PostMyResponseDto.of(savePost, user);
+
+        return PostMyResponseDto.of(savePost, getHearted(user, savePost));
     }
 
     @Transactional
@@ -75,7 +78,8 @@ public class PostService {
         Post post = findById(postId);
         findByUsername(post, user.getUsername());
         post.update(requestDto);
-        return PostMyResponseDto.of(post, user);
+
+        return PostMyResponseDto.of(post, getHearted(user, post));
     }
 
     @Transactional
@@ -85,7 +89,6 @@ public class PostService {
         postRepository.delete(post);
     }
 
-    ///////////////////////////////////////////////////////
     private Post findById(Long postId) {
         return postRepository.findById(postId).orElseThrow(
             () -> new PostExistsException(PostErrorCode.NOT_EXISTS_POST));
@@ -107,5 +110,13 @@ public class PostService {
         }
         return commentResponseDtoList;
     }
-    ///////////////////////////////////////////////////////
+
+    private Boolean getHearted(User user, Post post) {
+        return post.getHeartList()
+            .stream()
+            .filter(heart -> heart.getUser().getId().equals(user.getId()))
+            .findFirst()
+            .map(Heart::getIsHearted)
+            .orElse(DEFAULT_HEART);
+    }
 }

@@ -4,7 +4,7 @@ package com.sparta.springnewsfeed.domain.comment.entity;
 import com.sparta.springnewsfeed.domain.commentLike.entity.Likes;
 import com.sparta.springnewsfeed.domain.post.entity.Post;
 import com.sparta.springnewsfeed.domain.user.entity.User;
-import com.sparta.springnewsfeed.global.util.BaseTime;
+import com.sparta.springnewsfeed.domain.utils.BaseTime;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;

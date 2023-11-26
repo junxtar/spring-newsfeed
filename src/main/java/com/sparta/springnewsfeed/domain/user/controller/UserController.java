@@ -4,25 +4,24 @@ import com.sparta.springnewsfeed.domain.user.dto.*;
 import com.sparta.springnewsfeed.domain.user.service.*;
 import com.sparta.springnewsfeed.global.common.*;
 import com.sparta.springnewsfeed.global.security.*;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.*;
 import lombok.*;
 import org.springframework.http.*;
 import org.springframework.security.core.annotation.*;
-import org.springframework.stereotype.*;
 import org.springframework.web.bind.annotation.*;
 
-@Controller
+@RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/users")
 public class UserController {
 
     private final UserService userService;
 
-    //TODO:프로필 조회
     @GetMapping("/profile/{userId}")
     public ResponseEntity<UserResponseDto> getProfile(@PathVariable Long userId) {
         UserResponseDto userResponseDto = userService.getProfile(userId);
-        return ResponseEntity.ok().body(userResponseDto);
+        return ResponseEntity.ok(userResponseDto);
     }
 
     @PostMapping("/signup")
@@ -33,17 +32,27 @@ public class UserController {
 
     @PatchMapping("/profile/{userId}")
     public ResponseEntity<UserResponseDto> updateProfile(@PathVariable Long userId,
-        //TODO:프로필 수정
         @RequestBody UserUpdateProfileRequestDto requestDto,
         @AuthenticationPrincipal UserDetailsImpl userDetails) {
         UserResponseDto userResponseDto = userService.updateProfile(userId, requestDto,
             userDetails.getUser());
-        return ResponseEntity.status(201).body(userResponseDto);
+        return ResponseEntity.ok(userResponseDto);
     }
 
-    //TODO:로그아웃
+    @PutMapping("/password/{userId}")
+    public ResponseEntity<String> modifyPassword(@PathVariable Long userId,
+        @Valid @RequestBody UserModifyPasswordRequestDto requestDto,
+        @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        userService.modifyPassword(userId, requestDto,
+            userDetails.getUser());
+        return ResponseEntity.ok(CommonCode.OK.getMessage());
+    }
 
-    //TODO:비밀번호 수정 *보류*
+    @GetMapping("/logout")
+    public ResponseEntity<Void> logout(HttpServletRequest request) {
+        userService.logout(request);
 
+        return ResponseEntity.noContent().build();
+    }
 
 }

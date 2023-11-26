@@ -23,47 +23,51 @@ public class PostController {
 
     @GetMapping("/{postId}")
     public ResponseEntity<SelectPostResponseDto> getPost(@PathVariable Long postId,
-                                                   @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        @AuthenticationPrincipal UserDetailsImpl userDetails) {
         SelectPostResponseDto responseDto = postService.getPost(postId, userDetails.getUser());
-        return ResponseEntity.ok().body(responseDto);
+        return ResponseEntity.ok(responseDto);
     }
 
     @GetMapping
-    public ResponseEntity<List<PostResponseDto>> getPostList() {
-        List<PostResponseDto> responseDtoList = postService.getPostList();
-        return ResponseEntity.ok().body(responseDtoList);
+    public ResponseEntity<List<PostResponseDto>> getPostList(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        List<PostResponseDto> responseDtoList = postService.getPostList(userDetails.getUser());
+        return ResponseEntity.ok(responseDtoList);
     }
 
     @GetMapping("/mine")
-    public ResponseEntity<List<PostMyResponseDto>> getMyPostList(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public ResponseEntity<List<PostMyResponseDto>> getMyPostList(
+        @AuthenticationPrincipal UserDetailsImpl userDetails) {
         List<PostMyResponseDto> responseDtoList = postService.getMyPostList(userDetails.getUser());
-        return ResponseEntity.ok().body(responseDtoList);
+        return ResponseEntity.ok(responseDtoList);
     }
 
     @GetMapping("/users")
-    public ResponseEntity<List<UsersPostResponseDto>> getUsersPostList(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-        List<UsersPostResponseDto> responseDtoList = postService.getUsersPostList(userDetails.getUser());
-        return ResponseEntity.ok().body(responseDtoList);
+    public ResponseEntity<List<UsersPostResponseDto>> getUsersPostList(
+        @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        List<UsersPostResponseDto> responseDtoList = postService.getUsersPostList(
+            userDetails.getUser());
+        return ResponseEntity.ok(responseDtoList);
     }
 
     @PostMapping
     public ResponseEntity<PostMyResponseDto> createPost(@RequestBody PostRequestDto requestDto,
-                                                      @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        @AuthenticationPrincipal UserDetailsImpl userDetails) {
         PostMyResponseDto responseDto = postService.createPost(requestDto, userDetails.getUser());
         return ResponseEntity.status(201).body(responseDto);
     }
 
     @PutMapping("/{postId}")
     public ResponseEntity<PostMyResponseDto> updatePost(@PathVariable Long postId,
-                                                      @RequestBody PostRequestDto requestDto,
-                                                      @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        PostMyResponseDto responseDto = postService.updatePost(postId, requestDto, userDetails.getUser());
+        @RequestBody PostRequestDto requestDto,
+        @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        PostMyResponseDto responseDto = postService.updatePost(postId, requestDto,
+            userDetails.getUser());
         return ResponseEntity.ok().body(responseDto);
     }
 
     @DeleteMapping("/{postId}")
     public void deletePost(@PathVariable Long postId,
-                           @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        @AuthenticationPrincipal UserDetailsImpl userDetails) {
         postService.deletePost(postId, userDetails.getUser());
     }
 
