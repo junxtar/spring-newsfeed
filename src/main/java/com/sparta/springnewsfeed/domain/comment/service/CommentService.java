@@ -9,12 +9,11 @@ import com.sparta.springnewsfeed.domain.comment.repository.CommentRepository;
 import com.sparta.springnewsfeed.domain.post.entity.Post;
 import com.sparta.springnewsfeed.domain.post.repository.PostRepository;
 import com.sparta.springnewsfeed.domain.user.entity.User;
-import com.sparta.springnewsfeed.global.common.CommonCode;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import static com.sparta.springnewsfeed.domain.comment.constant.CommentConstant.DEFAULT_LIKE_CNT;
 
 @Service
 @RequiredArgsConstructor
@@ -32,6 +31,7 @@ public class CommentService {
             .post(post)
             .commentText(commentRequestDto.getCommentText())
             .user(user)
+            .likeCnt(DEFAULT_LIKE_CNT)
             .build();
 
         commentRepository.save(saveComment);
@@ -43,33 +43,30 @@ public class CommentService {
     public CommentResponseDto updateComment(Long postId, CommentRequestDto commentRequestDto,
                                             Long commentId, User user) {
         Post post = checkPost(postId);
-        Comment exist = checkComment(commentId);
-        Comment authority = checkAuthority(exist, user);
+        Comment comment = checkComment(commentId);
+        checkAuthority(comment, user);
 
-        authority.update(commentRequestDto.getCommentText());
+        comment.update(commentRequestDto.getCommentText());
 
         return CommentResponseDto.builder()
-            .username(authority.getUser().getUsername())
+            .username(comment.getUser().getUsername())
             .commentText(commentRequestDto.getCommentText())
             .build();
     }
 
     @Transactional
-    public ResponseEntity<String> deleteComment(Long postId, Long commentId, User user) {
+    public void deleteComment(Long postId, Long commentId, User user) {
         Post post = checkPost(postId);
-        Comment exist = checkComment(commentId);
-        Comment authority = checkAuthority(exist, user);
+        Comment comment = checkComment(commentId);
+        checkAuthority(comment, user);
 
-        commentRepository.delete(authority);
-
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(CommonCode.OK.getMessage());
+        commentRepository.delete(comment);
     }
 
-    private Comment checkAuthority(Comment comment, User user) {
+    private void checkAuthority(Comment comment, User user) {
         if (!comment.getUser().getUsername().equals(user.getUsername())) {
-            throw new CommentExistsException(CommentErrorCode.UN_AUTHORIZED_USER);
+            throw new CommentExistsException(CommentErrorCode.UNAUTHORIZED_USER);
         }
-        return comment;
     }
 
     private Comment checkComment(Long commentId) {

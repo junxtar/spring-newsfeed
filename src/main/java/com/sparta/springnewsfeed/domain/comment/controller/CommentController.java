@@ -3,6 +3,7 @@ package com.sparta.springnewsfeed.domain.comment.controller;
 import com.sparta.springnewsfeed.domain.comment.dto.CommentRequestDto;
 import com.sparta.springnewsfeed.domain.comment.dto.CommentResponseDto;
 import com.sparta.springnewsfeed.domain.comment.service.CommentService;
+import com.sparta.springnewsfeed.global.common.CommonCode;
 import com.sparta.springnewsfeed.global.security.UserDetailsImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -34,13 +35,14 @@ public class CommentController {
             commentService.updateComment(postId, commentRequestDto, commentId, userDetail.getUser()));
     }
 
+
     @DeleteMapping("/{commentId}")
-    public ResponseEntity<Void> deleteComment(@PathVariable Long postId,
+    public ResponseEntity<String> deleteComment(@PathVariable Long postId,
                               @PathVariable Long commentId,
                               @AuthenticationPrincipal UserDetailsImpl userDetails) {
         commentService.deleteComment(postId, commentId, userDetails.getUser());
 
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(CommonCode.OK.getMessage());
     }
 
 }
