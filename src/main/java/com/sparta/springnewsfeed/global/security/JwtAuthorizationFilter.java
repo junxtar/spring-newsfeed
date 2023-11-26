@@ -1,10 +1,11 @@
 package com.sparta.springnewsfeed.global.security;
 
 import static com.sparta.springnewsfeed.global.jwt.JwtUtil.ACCESS_TOKEN_HEADER;
+import static com.sparta.springnewsfeed.global.jwt.JwtUtil.BEARER_PREFIX;
 import static com.sparta.springnewsfeed.global.jwt.JwtUtil.REFRESH_TOKEN_HEADER;
 
-import com.sparta.springnewsfeed.global.jwt.JwtUtil;
 import com.sparta.springnewsfeed.domain.redis.RedisUtil;
+import com.sparta.springnewsfeed.global.jwt.JwtUtil;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -43,6 +44,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                 accessToken = jwtUtil.createAccessToken(
                         userDetailsService.UserById(userId).getUsername())
                     .split(" ")[1].trim();
+                res.addHeader("AccessToken", BEARER_PREFIX+accessToken);
             }
         }
 
