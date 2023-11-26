@@ -1,5 +1,7 @@
 package com.sparta.springnewsfeed.domain.comment.service;
 
+import static com.sparta.springnewsfeed.domain.comment.constant.CommentConstant.DEFAULT_LIKE_CNT;
+
 import com.sparta.springnewsfeed.domain.comment.dto.CommentRequestDto;
 import com.sparta.springnewsfeed.domain.comment.dto.CommentResponseDto;
 import com.sparta.springnewsfeed.domain.comment.entity.Comment;
@@ -12,8 +14,6 @@ import com.sparta.springnewsfeed.domain.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import static com.sparta.springnewsfeed.domain.comment.constant.CommentConstant.DEFAULT_LIKE_CNT;
 
 @Service
 @RequiredArgsConstructor
@@ -51,6 +51,7 @@ public class CommentService {
         return CommentResponseDto.builder()
             .username(comment.getUser().getUsername())
             .commentText(commentRequestDto.getCommentText())
+            .likeCnt(comment.getLikeCnt())
             .build();
     }
 
