@@ -22,6 +22,10 @@
         <br>JWT
     </td>
   </tr>
+</table>
+
+## ``Database``
+  <table>
   <tr>
      <td align="center" width="140">
         <img src="https://skillicons.dev/icons?i=mysql&theme=light" width="65" height="65" alt="MySQL logo" />
