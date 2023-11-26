@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Like {
+public class Likes {
 
     @Id
     @Column(name = "commentlike_id")
@@ -34,7 +34,7 @@ public class Like {
     private Comment comment;
 
     @Builder
-    public Like(Long id, User user, Post post, Comment comment, Boolean isLiked) {
+    public Likes(Long id, User user, Post post, Comment comment, Boolean isLiked) {
         this.id = id;
         this.user = user;
         this.post = post;

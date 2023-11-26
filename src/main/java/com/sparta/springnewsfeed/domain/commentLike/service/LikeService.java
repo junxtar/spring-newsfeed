@@ -5,7 +5,7 @@ import com.sparta.springnewsfeed.domain.comment.exception.CommentErrorCode;
 import com.sparta.springnewsfeed.domain.comment.exception.CommentExistsException;
 import com.sparta.springnewsfeed.domain.comment.repository.CommentRepository;
 import com.sparta.springnewsfeed.domain.commentLike.dto.LikeResponseDto;
-import com.sparta.springnewsfeed.domain.commentLike.entity.Like;
+import com.sparta.springnewsfeed.domain.commentLike.entity.Likes;
 import com.sparta.springnewsfeed.domain.commentLike.repository.LikeRepository;
 import com.sparta.springnewsfeed.domain.post.entity.Post;
 import com.sparta.springnewsfeed.domain.post.repository.PostRepository;
@@ -32,26 +32,26 @@ public class LikeService {
         Comment comment = checkComment(commentId);
 //        checkAuthority(user, comment);      // 이거 하면 좋아요는 코멘트 단 사람만 할 수 있게 되는거 아닌가?
 
-        Like like = likeRepository.findByUserAndPostAndComment(user, post, comment)
+        Likes likes = likeRepository.findByUserAndPostAndComment(user, post, comment)
             .orElseGet(() -> saveCommentLike(user, post, comment));
 
-        Boolean updated = like.updateLike();
+        Boolean updated = likes.updateLike();
         comment.updateLikeCnt(updated);
 
-        return LikeResponseDto.of(like.getIsLiked());
+        return LikeResponseDto.of(likes.getIsLiked());
     }
 
     @Transactional
-    public Like saveCommentLike(User user, Post post, Comment comment) {
+    public Likes saveCommentLike(User user, Post post, Comment comment) {
 
-        Like like = Like.builder()
+        Likes likes = Likes.builder()
             .user(user)
             .post(post)
             .comment(comment)
             .isLiked(DEFAULT_LIKE)
             .build();
 
-        return likeRepository.save(like);
+        return likeRepository.save(likes);
     }
 
 //    private static void checkAuthority(User user, Comment comment) {

@@ -1,7 +1,7 @@
 package com.sparta.springnewsfeed.domain.comment.entity;
 
 
-import com.sparta.springnewsfeed.domain.commentLike.entity.Like;
+import com.sparta.springnewsfeed.domain.commentLike.entity.Likes;
 import com.sparta.springnewsfeed.domain.post.entity.Post;
 import com.sparta.springnewsfeed.domain.user.entity.User;
 import com.sparta.springnewsfeed.global.util.BaseTime;
@@ -38,7 +38,7 @@ public class Comment extends BaseTime {
     private Post post;
 
     @OneToMany(mappedBy = "comment", cascade = CascadeType.REMOVE)
-    List<Like> likeList = new ArrayList<>();
+    List<Likes> likesList = new ArrayList<>();
 
     @Builder
     private Comment(Long id, String commentText, User user, Post post, Long likeCnt) {
