@@ -70,9 +70,8 @@ public class CommentService {
         }
     }
 
-    private Comment checkComment(Long commentId) {
+    public Comment checkComment(Long commentId) {
         return commentRepository.findById(commentId)
             .orElseThrow(() -> new CommentExistsException(CommentErrorCode.NOT_EXISTS_COMMENT));
     }
-
 }

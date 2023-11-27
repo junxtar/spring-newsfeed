@@ -1,14 +1,12 @@
 package com.sparta.springnewsfeed.domain.commentLike.service;
 
 import com.sparta.springnewsfeed.domain.comment.entity.Comment;
-import com.sparta.springnewsfeed.domain.comment.exception.CommentErrorCode;
-import com.sparta.springnewsfeed.domain.comment.exception.CommentExistsException;
-import com.sparta.springnewsfeed.domain.comment.repository.CommentRepository;
+import com.sparta.springnewsfeed.domain.comment.service.CommentService;
 import com.sparta.springnewsfeed.domain.commentLike.dto.LikeResponseDto;
 import com.sparta.springnewsfeed.domain.commentLike.entity.Likes;
 import com.sparta.springnewsfeed.domain.commentLike.repository.LikeRepository;
 import com.sparta.springnewsfeed.domain.post.entity.Post;
-import com.sparta.springnewsfeed.domain.post.repository.PostRepository;
+import com.sparta.springnewsfeed.domain.post.service.PostService;
 import com.sparta.springnewsfeed.domain.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,8 +20,8 @@ import static com.sparta.springnewsfeed.domain.commentLike.Constant.LikeConstant
 @Transactional(readOnly = true)
 public class LikeService {
 
-    private final PostRepository postRepository;
-    private final CommentRepository commentRepository;
+    private final PostService postService;
+    private final CommentService commentService;
     private final LikeRepository likeRepository;
 
     @Transactional
@@ -54,13 +52,11 @@ public class LikeService {
     }
 
     private Comment checkComment(Long commentId) {
-        return commentRepository.findById(commentId).orElseThrow(
-            () -> new CommentExistsException(CommentErrorCode.NOT_EXISTS_COMMENT));
+        return commentService.checkComment(commentId);
     }
 
     private Post checkPost(Long postId) {
-        return postRepository.findById(postId).orElseThrow(
-            () -> new CommentExistsException(CommentErrorCode.NOT_EXISTS_POST));
+        return postService.findById(postId);
     }
 
 }
