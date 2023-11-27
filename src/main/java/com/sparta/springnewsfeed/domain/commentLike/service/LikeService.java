@@ -26,8 +26,8 @@ public class LikeService {
 
     @Transactional
     public LikeResponseDto pressLike(User user, Long postId, Long commentId) {
-        Post post = checkPost(postId);
-        Comment comment = checkComment(commentId);
+        Post post = postService.findById(postId);
+        Comment comment = commentService.checkComment(commentId);
 
         Likes likes = likeRepository.findByUserAndPostAndComment(user, post, comment)
             .orElseGet(() -> saveCommentLike(user, post, comment));
@@ -49,14 +49,6 @@ public class LikeService {
             .build();
 
         return likeRepository.save(likes);
-    }
-
-    private Comment checkComment(Long commentId) {
-        return commentService.checkComment(commentId);
-    }
-
-    private Post checkPost(Long postId) {
-        return postService.findById(postId);
     }
 
 }
