@@ -1,7 +1,5 @@
 package com.sparta.springnewsfeed.domain.comment.service;
 
-import static com.sparta.springnewsfeed.domain.comment.constant.CommentConstant.DEFAULT_LIKE_CNT;
-
 import com.sparta.springnewsfeed.domain.comment.dto.CommentRequestDto;
 import com.sparta.springnewsfeed.domain.comment.dto.CommentResponseDto;
 import com.sparta.springnewsfeed.domain.comment.entity.Comment;
@@ -9,11 +7,13 @@ import com.sparta.springnewsfeed.domain.comment.exception.CommentErrorCode;
 import com.sparta.springnewsfeed.domain.comment.exception.CommentExistsException;
 import com.sparta.springnewsfeed.domain.comment.repository.CommentRepository;
 import com.sparta.springnewsfeed.domain.post.entity.Post;
-import com.sparta.springnewsfeed.domain.post.repository.PostRepository;
+import com.sparta.springnewsfeed.domain.post.service.PostService;
 import com.sparta.springnewsfeed.domain.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import static com.sparta.springnewsfeed.domain.comment.constant.CommentConstant.DEFAULT_LIKE_CNT;
 
 @Service
 @RequiredArgsConstructor
@@ -21,11 +21,11 @@ import org.springframework.transaction.annotation.Transactional;
 public class CommentService {
 
     private final CommentRepository commentRepository;
-    private final PostRepository postRepository;
+    private final PostService postService;
 
     @Transactional
     public CommentResponseDto createComment(Long postId, CommentRequestDto commentRequestDto, User user) {
-        Post post = checkPost(postId);
+        Post post = postService.findById(postId);
 
         Comment saveComment = Comment.builder()
             .post(post)
@@ -42,7 +42,7 @@ public class CommentService {
     @Transactional
     public CommentResponseDto updateComment(Long postId, CommentRequestDto commentRequestDto,
                                             Long commentId, User user) {
-        Post post = checkPost(postId);
+        Post post = postService.findById(postId);
         Comment comment = checkComment(commentId);
         checkAuthority(comment, user);
 
@@ -57,7 +57,7 @@ public class CommentService {
 
     @Transactional
     public void deleteComment(Long postId, Long commentId, User user) {
-        Post post = checkPost(postId);
+        Post post = postService.findById(postId);
         Comment comment = checkComment(commentId);
         checkAuthority(comment, user);
 
@@ -75,8 +75,4 @@ public class CommentService {
             .orElseThrow(() -> new CommentExistsException(CommentErrorCode.NOT_EXISTS_COMMENT));
     }
 
-    private Post checkPost(Long postId) {
-        return postRepository.findById(postId)
-            .orElseThrow(() -> new CommentExistsException(CommentErrorCode.NOT_EXISTS_POST));
-    }
 }
