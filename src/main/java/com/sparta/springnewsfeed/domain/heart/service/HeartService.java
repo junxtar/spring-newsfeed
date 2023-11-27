@@ -6,9 +6,7 @@ import com.sparta.springnewsfeed.domain.heart.dto.ResponseHeartDto;
 import com.sparta.springnewsfeed.domain.heart.entity.Heart;
 import com.sparta.springnewsfeed.domain.heart.repository.HeartRepository;
 import com.sparta.springnewsfeed.domain.post.entity.Post;
-import com.sparta.springnewsfeed.domain.post.exception.PostErrorCode;
-import com.sparta.springnewsfeed.domain.post.exception.PostExistsException;
-import com.sparta.springnewsfeed.domain.post.repository.PostRepository;
+import com.sparta.springnewsfeed.domain.post.service.PostService;
 import com.sparta.springnewsfeed.domain.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,11 +18,11 @@ import org.springframework.transaction.annotation.Transactional;
 public class HeartService {
 
     private final HeartRepository heartRepository;
-    private final PostRepository postRepository;
+    private final PostService postService;
 
     @Transactional
     public ResponseHeartDto pressHeart(User user, Long postId) {
-        Post post = findByPost(postId);
+        Post post = postService.findById(postId);
         Heart heart = heartRepository.findByUserAndPost(user, post)
             .orElseGet(() -> saveHeart(user, post));
 
@@ -43,11 +41,6 @@ public class HeartService {
             .build();
 
         return heartRepository.save(heart);
-    }
-
-    private Post findByPost(Long postId) {
-        return postRepository.findById(postId).orElseThrow(
-            () -> new PostExistsException(PostErrorCode.NOT_EXISTS_POST));
     }
 }
 

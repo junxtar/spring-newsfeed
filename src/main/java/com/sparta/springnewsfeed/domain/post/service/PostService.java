@@ -89,7 +89,7 @@ public class PostService {
         postRepository.delete(post);
     }
 
-    private Post findById(Long postId) {
+    public Post findById(Long postId) {
         return postRepository.findById(postId).orElseThrow(
             () -> new PostExistsException(PostErrorCode.NOT_EXISTS_POST));
     }
