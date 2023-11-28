@@ -34,7 +34,7 @@ public class Likes {
     private Comment comment;
 
     @Builder
-    public Likes(Long id, User user, Post post, Comment comment, Boolean isLiked) {
+    private Likes(Long id, User user, Post post, Comment comment, Boolean isLiked) {
         this.id = id;
         this.user = user;
         this.post = post;
