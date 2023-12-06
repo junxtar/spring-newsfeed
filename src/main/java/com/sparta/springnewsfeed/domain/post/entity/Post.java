@@ -51,7 +51,7 @@ public class Post extends BaseTime {
     List<Heart> heartList = new ArrayList<>();
 
     @Builder
-    public Post(String title, String content, Long heartCnt, User user) {
+    private Post(String title, String content, Long heartCnt, User user) {
         this.title = title;
         this.content = content;
         this.heartCnt = heartCnt;
