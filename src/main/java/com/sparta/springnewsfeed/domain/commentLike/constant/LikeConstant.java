@@ -1,4 +1,4 @@
-package com.sparta.springnewsfeed.domain.commentLike.constant;
+package com.sparta.springnewsfeed.domain.commentLike.Constant;
 
 public class LikeConstant {
 

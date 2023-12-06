@@ -7,7 +7,6 @@ import com.sparta.springnewsfeed.domain.post.entity.Post;
 import com.sparta.springnewsfeed.domain.user.entity.User;
 import com.sparta.springnewsfeed.domain.utils.BaseTime;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -29,7 +28,7 @@ public class Comment extends BaseTime {
     @Column(nullable = false)
     private String commentText;
 
-    @NotNull
+    @Column(nullable = false)
     private Long likeCnt = CommentConstant.DEFAULT_LIKE_CNT;
 
     @ManyToOne(fetch = FetchType.LAZY)
