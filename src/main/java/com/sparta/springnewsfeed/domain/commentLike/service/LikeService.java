@@ -12,7 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.sparta.springnewsfeed.domain.commentLike.Constant.LikeConstant.DEFAULT_LIKE;
+import static com.sparta.springnewsfeed.domain.commentLike.constant.LikeConstant.DEFAULT_LIKE;
 
 
 @Service

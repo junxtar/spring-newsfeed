@@ -39,7 +39,7 @@ public class CommentService {
     @Transactional
     public CommentResponseDto updateComment(Long postId, CommentRequestDto commentRequestDto,
                                             Long commentId, User user) {
-        Post post = postService.findById(postId);
+        postService.findById(postId);
         Comment comment = checkComment(commentId);
         checkAuthority(comment, user);
 
@@ -54,7 +54,7 @@ public class CommentService {
 
     @Transactional
     public void deleteComment(Long postId, Long commentId, User user) {
-        Post post = postService.findById(postId);
+        postService.findById(postId);
         Comment comment = checkComment(commentId);
         checkAuthority(comment, user);
 
