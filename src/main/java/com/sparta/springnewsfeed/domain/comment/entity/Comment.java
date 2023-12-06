@@ -1,7 +1,6 @@
 package com.sparta.springnewsfeed.domain.comment.entity;
 
 
-import com.sparta.springnewsfeed.domain.comment.constant.CommentConstant;
 import com.sparta.springnewsfeed.domain.commentLike.entity.Likes;
 import com.sparta.springnewsfeed.domain.post.entity.Post;
 import com.sparta.springnewsfeed.domain.user.entity.User;
@@ -29,7 +28,7 @@ public class Comment extends BaseTime {
     private String commentText;
 
     @Column(nullable = false)
-    private Long likeCnt = CommentConstant.DEFAULT_LIKE_CNT;
+    private Long likeCnt;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")

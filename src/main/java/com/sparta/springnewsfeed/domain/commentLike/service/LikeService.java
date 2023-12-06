@@ -12,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import static com.sparta.springnewsfeed.domain.commentLike.constant.LikeConstant.DEFAULT_LIKE;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -42,6 +44,7 @@ public class LikeService {
             .user(user)
             .post(post)
             .comment(comment)
+            .isLiked(DEFAULT_LIKE)
             .build();
 
         return likeRepository.save(likes);

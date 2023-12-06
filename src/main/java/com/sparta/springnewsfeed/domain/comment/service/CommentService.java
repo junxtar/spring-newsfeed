@@ -13,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import static com.sparta.springnewsfeed.domain.comment.constant.CommentConstant.DEFAULT_LIKE_CNT;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -29,6 +31,7 @@ public class CommentService {
             .post(post)
             .commentText(commentRequestDto.getCommentText())
             .user(user)
+            .likeCnt(DEFAULT_LIKE_CNT)
             .build();
 
         commentRepository.save(saveComment);

@@ -1,7 +1,6 @@
 package com.sparta.springnewsfeed.domain.commentLike.entity;
 
 import com.sparta.springnewsfeed.domain.comment.entity.Comment;
-import com.sparta.springnewsfeed.domain.commentLike.Constant.LikeConstant;
 import com.sparta.springnewsfeed.domain.post.entity.Post;
 import com.sparta.springnewsfeed.domain.user.entity.User;
 import jakarta.persistence.*;
@@ -21,7 +20,7 @@ public class Likes {
     private Long id;
 
     @Column(nullable = false)
-    private Boolean isLiked = LikeConstant.DEFAULT_LIKE;
+    private Boolean isLiked;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
